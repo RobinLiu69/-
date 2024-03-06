@@ -80,6 +80,7 @@ class Online():
         return f"J->:{data}:<-J".encode('utf-8')
     
     
+    
     def send_message(self, message):
         try:
             if message:
