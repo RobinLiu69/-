@@ -21,18 +21,19 @@ class Online():
         threading.Thread(target=self.find_player).start()
         
     def find_player(self):
-        while True:
-            try:
-                client_socket, client_address = self.start_server()
-                self.clients.append(client_socket)
-                self.receive_thread = threading.Thread(target=self.receive_message, args=(client_socket,client_address))
-                self.receive_thread.start()
-            except KeyboardInterrupt:
-                print("server close")
-            finally:
-                for client in self.clients:
-                    client.close()
-                self.server_socket.close()
+        # while True:
+        #     try:
+        client_socket, client_address = self.start_server()
+        if client_socket and client_address:
+            self.clients.append(client_socket)
+            self.receive_thread = threading.Thread(target=self.receive_message, args=(client_socket,client_address))
+            self.receive_thread.start()
+            # except KeyboardInterrupt:
+            #     print("server close")
+            # finally:
+            #     for client in self.clients:
+            #         client.close()
+            #     self.server_socket.close()
 
 
 
@@ -96,8 +97,8 @@ class Online():
         try:
             self.server_socket.bind((self.ip, self.port))
         except OSError as e:
-            print(f"OSError: {e}")
-            return False
+            # print(f"OSError: {e}")
+            return False, False
         self.server_socket.listen(10)
         print('Server is listening for connections...')
         
@@ -105,10 +106,10 @@ class Online():
             self.client_socket.connect((self.other_server_address, self.port))
         except ConnectionRefusedError:
             print("ConnectionRefusedError")
-            return False
+            return False, False
         except socket.gaierror:
             print("socket.gaierror")
-            return False
+            return False, False
         print("Connected to server")
         client_socket, client_address = self.server_socket.accept()
         print(f'Connection from {client_address}')
