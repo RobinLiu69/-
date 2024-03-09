@@ -62,11 +62,12 @@ class Message():
 
         client_socket.close()
         
-    def send_data(self, room_name: str, items: list[str], players: list[str]) -> bool:
+    def send_data(self, room_name: str, items: list[str], players: list[str], cards: list[str]) -> bool:
         try:
             data = {"room_name" : room_name, "items" : items, "players" : players}
-            # encoded_data = json.dumps(data).encode()
+            
             self.client_socket.send(f"J->:{data}:<-J".encode('utf-8'))
+            self.client_socket.send(f"C->:{cards}:<-C".encode('utf-8'))
             return True
         except Exception as e:
             print(e)
