@@ -38,18 +38,18 @@ class Server:
                 if dataRes or cardRes:
                     for data in dataRes:
                         try:
-                            data: str = json.loads(data[4:-4:].replace("'", "\""))
-                            res: Datas = self.datas.get(data["room_name"], None)
+                            jsonData: str = json.loads(data[4:-4:].replace("'", "\""))
+                            res: Datas = self.datas.get(jsonData["room_name"], None)
                             if not res:
-                                self.datas[data["room_name"]] = Datas(data["room_name"], data["items"], data["players"])
+                                self.datas[jsonData["room_name"]] = Datas(jsonData["room_name"], jsonData["items"], jsonData["players"])
                             else:
-                                res.update(data)
+                                res.update(jsonData)
                         except:
                             print("Error decoding", data)
                     for data in cardRes:
                         try:
-                            data: str = json.loads(data[4:-4:].replace("'", "\""))
-                            self.cards: Datas = data
+                            jsonData: str = json.loads(data[4:-4:].replace("'", "\""))
+                            self.cards: Datas = jsonData
                         except:
                             print("Error decoding", data)
                 else:
