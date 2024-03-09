@@ -19,6 +19,8 @@ class Message():
         self.server_close = False
         self.client_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         self.server_address = ('25.36.126.26', 12345)
+        self.datas: dict[Datas] = {}
+        self.cards: list[str] = []
         try: 
             self.client_socket.connect(self.server_address)
             self.receive_thread = threading.Thread(target=self.receive_data, args=(self.client_socket))
@@ -27,7 +29,7 @@ class Message():
             self.error_message = "Server has not activated, please wait."
             self.server_close = True
 
-        self.datas = {}
+        
     def receive_data(self, client_socket: socket.socket) -> None:
         try:
             while True:
@@ -47,26 +49,26 @@ class Message():
                             print("Error decoding", data)
                     for data in cardRes:
                         try:
-                            jsonData = json.loads(data[4:-4:].replace("'", "\""))
-                            self.datas[jsonData["room_name"]] = Datas((jsonData["room_name"], jsonData["items"]), jsonData["players"])
+                            jsonData: str = json.loads(data[4:-4:].replace("'", "\""))
+                            self.cards: Datas = jsonData
                         except:
                             print("Error decoding", data)
                         
         except Exception as e:
-            print(str(e))
-            # ConnectionAbortedError.winerror.
+            print(e)
             if str(e) != "[WinError 10053] 連線已被您主機上的軟體中止。":
-                print("伺服器未開啟，資料傳輸與接收已關閉，重啟遊戲可重新連接")
-            pass
+                print("Server isn't started, relunch the server to connet to it.")
+            
 
         client_socket.close()
         
-    def send_data(self, user_name, pos, rotate):
+    def send_data(self, room_name: str, items: list[str], players: list[str]) -> bool:
         try:
-            data = {"user_name" : user_name, "x" : pos[0], "y" : pos[1], "rotate" : rotate}
+            data = {"room_name" : room_name, "items" : items, "players" : players}
             # encoded_data = json.dumps(data).encode()
             self.client_socket.send(f"J->:{data}:<-J".encode('utf-8'))
+            return True
         except Exception as e:
             print(e)
-            print(1)
-            print("客户端关闭")
+            print("Client closed.")
+            return False
