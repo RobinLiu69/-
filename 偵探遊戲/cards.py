@@ -21,13 +21,12 @@ class Cards:
         self.draw(surface)
 
     def touch(self, x: int, y: int) -> bool:
-        self.
-    
+        return True
+
     def draw(self, surface: pygame.surface.Surface):
         surface.blit(self.image, (self.x,self.y))
 
 
-
-
-
-
+class Ability:
+    def __init__(self, name: str):
+        ...
