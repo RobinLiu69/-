@@ -17,6 +17,12 @@ class Cards:
         self.imageOriginal.set_colorkey((255,255,255))
         self.image = self.imageOriginal.copy()
     
+    def ability(self):
+        ...
+    
+    def use(self):
+        ...
+    
     def update(self, surface: pygame.surface.Surface) -> None:
         self.draw(surface)
 
@@ -29,4 +35,6 @@ class Cards:
 
 class Ability:
     def __init__(self, name: str):
-        ...
+        self.name = name
+        
+    

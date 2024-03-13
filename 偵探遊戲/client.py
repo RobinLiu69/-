@@ -15,12 +15,13 @@ class Datas:
                 self.players = value
 
 class Message():
-    def __init__(self) -> None:
+    def __init__(self, server_address: str) -> None:
         self.server_close = False
         self.client_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-        self.server_address = ('25.36.126.26', 12345)
+        self.server_address = (server_address, 12345)
         self.datas: dict[Datas] = {}
         self.cards: list[str] = []
+        
         try: 
             self.client_socket.connect(self.server_address)
             self.receive_thread = threading.Thread(target=self.receive_data, args=(self.client_socket))
@@ -71,5 +72,15 @@ class Message():
             return True
         except Exception as e:
             print(e)
-            print("Client closed.")
+            print("Server are closed.")
             return False
+    
+def main() -> int:
+    
+    
+    
+    
+    return 0    
+        
+if __name__ == "__main__":
+    main()

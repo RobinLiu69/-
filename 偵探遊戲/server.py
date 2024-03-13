@@ -17,7 +17,8 @@ class Datas:
 class Server:
     def __init__(self, cards: list[str]=[], datas: dict[Datas]={}) -> None:
         self.server_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-        self.server_address = ('25.61.96.35', 12345)
+        self.server_address = (socket.gethostbyname(socket.gethostname()), 12345)
+        print(self.server_address)
         self.server_socket.bind(self.server_address)
         self.server_socket.listen(8)
         print('wauiting clients to connect...')
