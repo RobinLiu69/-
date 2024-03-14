@@ -18,3 +18,4 @@ plane.showcolor()
 plane.color = "blue"
 
 plane.showcolor()
+print("nunu")
