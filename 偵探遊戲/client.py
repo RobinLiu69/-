@@ -1,5 +1,5 @@
 import socket, json, re
-import threading
+import threading, time
 
 class Datas:
     def __init__(self, name: str) -> None:
@@ -14,7 +14,7 @@ class Datas:
             elif key == "players":
                 self.players = value
 
-class Message():
+class Client:
     def __init__(self, server_address: str) -> None:
         self.server_close = False
         self.client_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -22,14 +22,24 @@ class Message():
         self.datas: dict[Datas] = {}
         self.cards: list[str] = []
         
-        try: 
+        while not self.connect(): print("Retrying to connect...")
+
+    def connect(self) -> bool:
+        print("Trying to connect to server...")
+        time.sleep(1.5)
+        try:
             self.client_socket.connect(self.server_address)
             self.receive_thread = threading.Thread(target=self.receive_data, args=(self.client_socket))
             self.receive_thread.start()
-        except: 
-            self.error_message = "Server has not activated, please wait."
-            self.server_close = True
-
+            print("Connected")
+            return False
+        except KeyboardInterrupt:
+            print("\nStop the process")
+            return True
+        except:
+            self.error_message = "Server has not activated, please wait..."
+            # self.server_close = True
+            return False
         
     def receive_data(self, client_socket: socket.socket) -> None:
         try:
@@ -74,9 +84,11 @@ class Message():
             print(e)
             print("Server are closed.")
             return False
+        
+    
     
 def main() -> int:
-    
+    robin = Client("12.0.0.0")
     
     
     

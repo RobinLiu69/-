@@ -25,8 +25,10 @@ class Cards:
     
     def update(self, surface: pygame.surface.Surface) -> None:
         self.draw(surface)
+        
 
     def touch(self, x: int, y: int) -> bool:
+        
         return True
 
     def draw(self, surface: pygame.surface.Surface):
@@ -35,6 +37,6 @@ class Cards:
 
 class Ability:
     def __init__(self, name: str):
-        self.name = name
-        
+            self.name = name
+            
     
