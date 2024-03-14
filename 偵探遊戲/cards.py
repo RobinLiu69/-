@@ -3,7 +3,7 @@ import pygame
 
 
 class Cards:
-    def __init__(self, size: float, name: str, x: float=1 , y:float= 1, owner:str = "物品") -> None:
+    def __init__(self, size: float, name: str, x: float=1 , y: float= 1, owner: str="物品") -> None:
         self.width = size 
         self.height = size
         self.owner = owner
