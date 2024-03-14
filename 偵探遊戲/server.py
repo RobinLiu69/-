@@ -78,7 +78,7 @@ class Server:
                 self.clients.append(client_socket)
                 print(f"Connect from:{client_address}")
 
-                client_thread = threading.Thread(target=self.handle_client, args=(client_socket))
+                client_thread = threading.Thread(target=self.handle_client, args=[client_socket])
                 client_thread.start()
                 
         except KeyboardInterrupt:

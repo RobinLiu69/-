@@ -29,7 +29,7 @@ class Client:
         time.sleep(1.5)
         try:
             self.client_socket.connect(self.server_address)
-            self.receive_thread = threading.Thread(target=self.receive_data, args=(self.client_socket))
+            self.receive_thread = threading.Thread(target=self.receive_data, args=[self.client_socket])
             self.receive_thread.start()
             print("Connected")
             return True
@@ -88,7 +88,7 @@ class Client:
     
     
 def main() -> int:
-    robin = Client("12.0.0.0")
+    robin = Client("127.0.0.1")
     
     
     
