@@ -17,11 +17,12 @@ class Datas:
 class Server:
     def __init__(self, cards: list[str]=[], datas: dict[Datas]={}) -> None:
         self.server_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        # self.server_address = ("25.61.96.35", 12345)
         self.server_address = (socket.gethostbyname(socket.gethostname()), 12345)
-        print(self.server_address)
+        print(f"Server address(IPv4):{self.server_address}")
         self.server_socket.bind(self.server_address)
-        self.server_socket.listen(8)
-        print('wauiting clients to connect...')
+        self.server_socket.listen(5)
+        print('Waiting clients to connect...')
         self.clients: list[socket.socket] = []
         self.cards: list[str] = cards
         self.datas: dict = datas
@@ -75,13 +76,13 @@ class Server:
             while True:
                 client_socket, client_address = self.server_socket.accept()
                 self.clients.append(client_socket)
-                print(f"connect from:{client_address}")
+                print(f"Connect from:{client_address}")
 
                 client_thread = threading.Thread(target=self.handle_client, args=(client_socket))
                 client_thread.start()
                 
         except KeyboardInterrupt:
-            print("\nserver shut down")
+            print("\nServer shut down")
         finally:
             for client in self.clients:
                 client.close()

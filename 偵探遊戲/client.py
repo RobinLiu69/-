@@ -32,13 +32,13 @@ class Client:
             self.receive_thread = threading.Thread(target=self.receive_data, args=(self.client_socket))
             self.receive_thread.start()
             print("Connected")
-            return False
+            return True
         except KeyboardInterrupt:
             print("\nStop the process")
             return True
         except:
             self.error_message = "Server has not activated, please wait..."
-            # self.server_close = True
+            self.server_close = True
             return False
         
     def receive_data(self, client_socket: socket.socket) -> None:
