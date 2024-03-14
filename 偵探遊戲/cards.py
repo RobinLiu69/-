@@ -34,9 +34,3 @@ class Cards:
     def draw(self, surface: pygame.surface.Surface):
         surface.blit(self.image, (self.x,self.y))
 
-
-class Ability:
-    def __init__(self, name: str):
-            self.name = name
-            
-    

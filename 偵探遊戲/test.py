@@ -8,7 +8,6 @@ class car:
         print(self.color)
     
 
-plane.showcolor()
 
 plane = car(3, "red")
 you = car(4, "green")
