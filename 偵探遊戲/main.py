@@ -1,155 +1,86 @@
 import pygame
-import connect, threading
-from setting import *
+import client, server, threading
+from os import path
+import types
 
-class Player:
+
+
+class Room:
+    def __init__(self, room_name: str, size: tuple[int, int]) -> None:
+        self.name = room_name
+        self.x = 0
+        self.y = 0
+        self.width = size[0]
+        self.height = size[1]
+        self.imageOriginal = pygame.Surface((self.width, self.height))
+        self.imageOriginal.fill((255,255,255))
+        self.imageOriginal.blit(source = pygame.transform.scale(pygame.image.load(path.join("image/"+room_name+".png")).convert_alpha(),(180, 180)), dest = (0,0))
+        self.imageOriginal.set_colorkey((255,255,255))
+        self.image = self.imageOriginal.copy()
+        
+    def update(self, surface: pygame.surface.Surface) -> None:
+        self.draw(surface)
+    
+    def init(self, data: client.Datas) -> int:
+        try:
+            self.items = data.items
+            self.players = data.players
+            print("initalized")
+            return 0
+        except Exception as e:
+            return 1
+
+        
+    def draw(self, surface: pygame.surface.Surface) -> int:
+        try:
+            surface.blit(self.image, (self.x,self.y))
+            return 0
+        except Exception as e:
+            print(e)
+            return 1
+
+class Screen:
     def __init__(self) -> None:
-        self.name = input("輸入用戶名")
-        self.job = ""
-        self.handcard = ["take", "take", "put down"]
-
-
-
-class Rooms:
-    def __init__(self, name, rooms:list["Rooms"]) -> None:
-        self.name = name
-        self.items = ["gun", "food"]
-        self.players: list[Player] = []
-        self.furniture = []
-        rooms.append(self)
+        self.width, self.height = self.info()
+        self.screen = pygame.display.set_mode((self.width, self.height))
+        pygame.display.set_caption("nunu")
+        
+    def info(self) -> tuple[int, int]:
+        try:
+            return self.width, self.height
+        except:
+            return pygame.display.get_desktop_sizes().pop()
+        
+        
+    def update1(self) -> None:
+        self.screen.fill((0, 0, 0))
     
-        
-    def enter(self, player: Player) -> int:
-        self.players.append(player.name)
+    def update2(self) -> None:
+        pygame.display.flip()
     
-    def leave(self, player: Player) -> int:
-        self.players.remove(player.name)
-    
-    def select(self) -> int:
-        choise = input("輸入拿取第幾項:")
-        if choise.isdigit():
-            return int(choise)-1
-        else:
-            if choise.lower() == "exit": 
-                print("exit")
-                return -1
-            else:
-                print("無效動作")
-                return -1
-            
-    def pack(self) -> tuple:
-        return [self.name, self.items, self.players, self.furniture]
-        
-    
-    def take(self, player: Player) -> int:
-        print(f"{self.name}-items: "+" ".join(f"{index+1}:{value}" for index, value in enumerate(self.items)))
-        select = self.select()
-        if select > -1:
-            if self.items[select] in card:
-                return 1
-            player.handcard.append(self.items.pop(select))
-            self.items.append("taken")
-            return 0
-        else:
-            return 1
-    
-    def put_down(self, player: Player) -> int:
-        print(f"{player.name}-handcard: "+" ".join(f"{index+1}:{value}" for index, value in enumerate(player.handcard)))
-        select = self.select()
-        if select > -1:
-            if player.handcard[select] in card:
-                return 1
-            self.items.append(player.handcard.pop(select))
-            self.items.append("put down")
-            return 0
-        else:
-            return 1
-        
-    def swap(self, player:Player) -> int:
-        print(f"{self.name}-items"+" ".join(f"{index+1}:{value}" for index, value in enumerate(self.items)))
-        select = self.select()
-        if select > -1:
-            temp = player.handcard.pop(select)
-            print(f"{self.name}-items: "+" ".join(f"{index+1}:{value}" for index, value in enumerate(self.items)))
-            select = self.select()
-            self.items.insert(select, temp)
-            self.items.append("swapped")
-            return 0
-        else:
-            return 1
-        
-        
-    def interact(self, action : str, player: Player, online: connect.Online) -> int:
-        if action == "take" and "take" in player.handcard:
-            self.take(player)
-        elif action == "put_down" and "put down" in player.handcard:
-            self.put_down(player)
-        elif action == "swap" and "swap" in player.handcard:
-            self.swap(player)
-        elif action.lower() == "d":
-            print(self.pack(), "\n", online.data)
-        elif action.lower() == "exit":
-            self.leave(player)
-            return 0
-        
-        online.update(player.name, self.pack())
-        return 1
-    
-def go_to_room(rooms: list[Rooms], player: Player, online: connect.Online) -> int:
-    print(" ".join(room.name for room in rooms))
-    select = input("輸入房間名子:")
-    Troom = None
-    for index, room in enumerate(rooms):
-        if room.name == select:
-            Troom = room
-            break
-        
-    if Troom != None:
-        Troom.enter(player)
-        running = True
-        while running:
-            threading.Thread(target=update_room, args=(rooms, online)).start()
-            print(f"{player.name}-handcard"+" ".join(f"{index+1}:{value}" for index, value in enumerate(player.handcard)))
-            running = Troom.interact(input("輸入 take 拿取 put_down 放下 swap 置換 exit 退出"), player, online)
-        
-        
-    print("結束回合")
-               
-def update_room(rooms: list[Rooms], online: connect.Online):
-    try:
-        for index, room in enumerate(rooms):
-            print(room, online.data)
-            if room.name == online.data[1][0]:
-                room.items = online.data[1][1]
-                room.players = online.data[1][2]
-                room.furniture = online.data[1][3]
-                print('update')
-    except:
-        ...
-
 def main() -> int:
-    card = ["taken", "put down", "swapped"]
-    rooms: list[Rooms] = []
-    Rooms("kitchen", rooms)
+    pygame.init()
+    # Online = client.Client(input())
+    Online = client.Client("127.0.0.1")
+    room_list: list[Room] = []
     
-    player = Player()
-    online = connect.Online()
+    
+    screen = Screen()
+    # roomlist.append(Room("kitchen"), Room("bedroom"), Room("yard"),Room("study"), Room("liviingroom"))
+    room_list.append(Room("kitchen", screen.info()))
+    for room in room_list:
+        room.init(Online.datas[room.name])
     running = True
-    
-    try:
-        while running:
-
-            go_to_room(rooms, player, online)
-            if input("退出?(y/n):").lower() == "y":
-                online.shut_down()
+    while running == True:
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
                 running = False
-            
-    except KeyboardInterrupt:
-        online.shut_down()
-            
-    return 0    
-    
-    
-    
+        screen.update1()
+        
+        
+        screen.update2()
+    return 0
+
+
 if __name__ == "__main__":
     main()

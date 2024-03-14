@@ -25,11 +25,12 @@ class Cards:
     
     def update(self, surface: pygame.surface.Surface) -> None:
         self.draw(surface)
-        
 
-    def touch(self, x: int, y: int) -> bool:
-        
-        return True
+    def touch(self, mouse_x: int, mouse_y: int) -> int:
+        if self.x < mouse_x < self.x + self.width and self.y < mouse_y < self.y + self.height:
+            return 1
+        else:
+            return 0
 
     def draw(self, surface: pygame.surface.Surface):
         surface.blit(self.image, (self.x,self.y))

@@ -2,10 +2,10 @@ import socket, json, re
 import threading, time
 
 class Datas:
-    def __init__(self, name: str) -> None:
+    def __init__(self, name: str, items: list[str]=[], players: list[str]=[]) -> None:
         self.name: str = name
-        self.items: list[str] = []
-        self.players: list[str] = []
+        self.items: list[str] = items
+        self.players: list[str] = players
         
     def update(self, kwargs: dict) -> None:
         for key, value in kwargs.items():
@@ -19,15 +19,15 @@ class Client:
         self.server_close = False
         self.client_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         self.server_address = (server_address, 12345)
-        self.datas: dict[Datas] = {}
+        self.datas: dict[Datas] = {"kitchen":Datas("kitchen", ["notebook", "food"], ["robin"])}
         self.cards: list[str] = []
         
         while not self.connect(): print("Retrying to connect...")
 
     def connect(self) -> bool:
         print("Trying to connect to server...")
-        time.sleep(1.5)
         try:
+            time.sleep(1.5)
             self.client_socket.connect(self.server_address)
             self.receive_thread = threading.Thread(target=self.receive_data, args=[self.client_socket])
             self.receive_thread.start()
