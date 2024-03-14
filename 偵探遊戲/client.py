@@ -18,7 +18,7 @@ class Client:
     def __init__(self, server_address: str) -> None:
         self.server_close = False
         self.client_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-        self.server_address = (server_address, 9000)
+        self.server_address = (server_address, 1234)
         self.datas: dict[Datas] = {"kitchen":Datas("kitchen", ["notebook", "food"], ["robin"])}
         self.cards: list[str] = []
         
@@ -36,6 +36,8 @@ class Client:
         except KeyboardInterrupt:
             print("\nStop the process")
             return True
+        except Exception as e:
+            print(e)
         except:
             print("Server has not activated, please wait...")
             # self.server_close = True

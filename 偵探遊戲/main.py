@@ -61,7 +61,7 @@ class Screen:
 def main() -> int:
     pygame.init()
     Online = client.Client(input())
-    # Online = client.Client("192.168.232.233")
+    # Online = client.Client("13.76.138.194")
     room_list: list[Room] = []
     
     
