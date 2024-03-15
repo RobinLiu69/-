@@ -17,7 +17,8 @@ class Datas:
 class Server:
     def __init__(self, cards: list[str]=[], datas: dict[Datas]={}) -> None:
         self.server_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-        self.server_address = ("0.0.0.0", 9000)
+        # self.server_address = ("203.72.57.220", 1234)
+        
         self.server_address = (socket.gethostbyname(socket.gethostname()), 1234)
         print(f"Server address(IPv4):{self.server_address}")
         self.server_socket.bind(self.server_address)
