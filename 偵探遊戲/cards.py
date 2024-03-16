@@ -22,22 +22,12 @@ class Card:
         self.imageOriginal.blit(source = pygame.transform.scale(pygame.image.load(path.join("image/"+name+".png")).convert_alpha(),(180, 180)), dest = (0,0))
         self.imageOriginal.set_colorkey((255,255,255))
         self.image = self.imageOriginal.copy()
-<<<<<<< HEAD
-    
     
     def use(self):
         mouse_x, mouse_y = pygame.mouse.get_pos()
         for i in c.cards:
             if i.touch(mouse_x, mouse_y) == 1:
                 i.ability()
-=======
-        
-    def use(self, mouse_x: int, mouse_y:int):
-        if self.touch(mouse_x, mouse_y) == 1:
-            self.ability()
-            return 1
->>>>>>> 95fd81d (Co-authored-by: z9487xd <z9487xd@users.noreply.github.com>)
-    
     def update(self, surface: pygame.surface.Surface) -> None:
         self.draw(surface)
 
