@@ -58,7 +58,7 @@ class Online():
                         print("Error decoding", data)
         except Exception as e:
             print(f"{e}")
-            pass
+         
 
         
     def shut_down(self):

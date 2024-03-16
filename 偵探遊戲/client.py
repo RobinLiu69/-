@@ -19,7 +19,7 @@ class Client:
         self.server_close = False
         self.client_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         self.server_address = (server_address, 1234)
-        self.datas: dict[Datas] = {"kitchen":Datas("kitchen", ["notebook", "food"], ["robin"])}
+        self.datas: dict[Datas] = {"kitchen": Datas("kitchen", ["notebook", "food"], ["robin"])}
         self.cards: list[str] = []
         
         while not self.connect(): print("Retrying to connect...")
@@ -75,12 +75,16 @@ class Client:
 
         client_socket.close()
         
-    def send_data(self, room_name: str, items: list[str], players: list[str], cards: list[str]) -> bool:
+    def send_data(self, room_name: str=None, items: list[str]=None, players: list[str]=None, cards: list[str]=None) -> bool:
         try:
-            data = {"room_name" : room_name, "items" : items, "players" : players}
+            if room_name != None:
+                data = {"room_name" : room_name, "items" : items, "players" : players}
             
-            self.client_socket.send(f"J->:{data}:<-J".encode('utf-8'))
-            self.client_socket.send(f"C->:{cards}:<-C".encode('utf-8'))
+                self.client_socket.send(f"J->:{data}:<-J".encode('utf-8'))
+            elif cards != None:
+                self.client_socket.send(f"C->:{cards}:<-C".encode('utf-8'))
+            else:
+                return False
             return True
         except Exception as e:
             print(e)
