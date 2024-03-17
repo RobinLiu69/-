@@ -1,16 +1,22 @@
 from os import path
 import pygame
-hand: list[str] = []
-items: list[str] = []
-feild: list[str] = []
-def draw(cards: list[str]) -> bool:
+
+functional_cards = ("放置","謀殺", "布置現場","交易","足跡","拿取","檢視")
+
+def draw_card(cards: list[str]) -> list[str]:
     hand.append(cards.pop())
     return cards
 
 
+def deal_used_card():
+    if inusing != None:
+        inusing.ability()
+    
+
+
 class Card:
     def __init__(self, size: float, name: str, x: int=1 , y: int= 1) -> None:
-        self.width = size 
+        self.width = size
         self.height = size
         self.x = x
         self.y = y
@@ -23,10 +29,10 @@ class Card:
 
         self.ab = False
     def use(self, mouse_x, mouse_y):
+            global inusing
             if self.touch(mouse_x, mouse_y) == 1:
-                self.ability()
-                self.ab = True
-
+                inusing = self  
+                
     def update(self, surface: pygame.surface.Surface) -> None:
         self.draw(surface)
 
@@ -47,27 +53,24 @@ class Take(Card):
         super().__init__(size, "拿取", x, y)
     
     def ability(self):
-        while self.ab == True:
-            for i in items:
-                for event in pygame.event.get():
-                    if i.touch() == 1 and event.type == pygame.MOUSEBUTTONDOWN:
-                        hand.append(i)
-                        items.remove(i)
-                        self.ab = False
-        return hand, items
+        ...
     
 class Put_down(Card):
     def __init__(self, size: float, x: int=1, y: int=1) -> None:
         super().__init__(size, "放置", x, y)
+
     def ability(self):
-        while self.ability == True:
-            for i in hand:
-                for event in pygame.event.get():
-                    if i.touch() == 1 and event.type == pygame.MOUSEBUTTONDOWN:#怎麼判斷是否物品牌
+        ...
 
 class Kill(Card):  
     def __init__(self, size: float, x: int=1, y: int=1) -> None:
         super().__init__(size, "謀殺", x, y)
-    def ability(self):
+    def abiility(self):
         pass
 
+
+
+hand: list[Card] = []
+items: list[Card] = []
+feild: list[Card] = []
+inusing: Card = None

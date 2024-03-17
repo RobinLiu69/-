@@ -27,7 +27,7 @@ class Room:
     
     def change(self, online: client.Client):
         online.send_data(self.name, self.items, self.players)
-            
+    
     def data_update(self, data: client.Datas) -> int:
         try:
             self.items = data.items
@@ -48,14 +48,15 @@ class Room:
             return 1
 
 class Screen:
-    def __init__(self) -> None:
+    def __init__(self, width: int=None, height: int=None) -> None:
+        self.width, self.height = width, height
         self.width, self.height = self.info()
         self.screen = pygame.display.set_mode((self.width, self.height))
         pygame.display.set_caption("nunu")
         
     def info(self) -> tuple[int, int]:
         try:
-            return self.width, self.height
+            return self.width/1, self.height/1
         except:
             return pygame.display.get_desktop_sizes().pop()
         
@@ -66,6 +67,17 @@ class Screen:
     def update2(self) -> None:
         pygame.display.flip()
     
+def room_selection(screen) -> int:
+    while running == True:
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                running = False 
+        
+        screen.update1()
+        
+        screen.update2()
+    return 0
+
 def main() -> int:
     pygame.init()
     Online = client.Client(input())
@@ -90,6 +102,7 @@ def main() -> int:
         
         screen.update2()
     return 0
+
 
 
 if __name__ == "__main__":
