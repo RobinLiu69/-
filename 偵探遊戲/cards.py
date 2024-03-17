@@ -20,11 +20,13 @@ class Card:
         self.imageOriginal.blit(source = pygame.transform.scale(pygame.image.load(path.join("image/"+name+".png")).convert_alpha(),(180, 180)), dest = (0,0))
         self.imageOriginal.set_colorkey((255,255,255))
         self.image = self.imageOriginal.copy()
+
         self.ab = False
     def use(self, mouse_x, mouse_y):
             if self.touch(mouse_x, mouse_y) == 1:
                 self.ability()
                 self.ab = True
+
     def update(self, surface: pygame.surface.Surface) -> None:
         self.draw(surface)
 
