@@ -23,9 +23,8 @@ class Card:
         self.imageOriginal.set_colorkey((255,255,255))
         self.image = self.imageOriginal.copy()
     
-    def use(self):
-        mouse_x, mouse_y = pygame.mouse.get_pos()
-        for i in c.cards:
+    def use(self, mouse_x, mouse_y):
+        for i in cards:
             if i.touch(mouse_x, mouse_y) == 1:
                 i.ability()
     def update(self, surface: pygame.surface.Surface) -> None:
