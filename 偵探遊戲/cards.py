@@ -3,7 +3,7 @@ import pygame
 hand: list[str] = []
 cards: list[str] = []
 
-
+P nunu
 def draw(cards: list[str]) -> bool:
     hand.append(cards.pop())
     return cards
