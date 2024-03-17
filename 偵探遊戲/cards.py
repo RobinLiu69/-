@@ -13,7 +13,6 @@ def deal_used_card():
         inusing.ability()
     
 
-
 class Card:
     def __init__(self, size: float, name: str, x: int=1 , y: int= 1) -> None:
         self.width = size
@@ -68,6 +67,7 @@ class Kill(Card):
     def abiility(self):
         pass
 
+class 
 
 
 hand: list[Card] = []

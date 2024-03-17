@@ -20,7 +20,12 @@ class Room:
         self.imageOriginal.blit(source = pygame.transform.scale(pygame.image.load(path.join("image/"+room_name+".png")).convert_alpha(),(180, 180)), dest = (0,0))
         self.imageOriginal.set_colorkey((255,255,255))
         self.image = self.imageOriginal.copy()
-        
+
+    def distance(self, x: int, y: int) -> float:
+        dx = x - self.x
+        dy = y - self.y
+        return (dx**2+dy**2)**0.5
+    
     def update(self, surface: pygame.surface.Surface, data: client.Datas) -> None:
         self.draw(surface)
         self.data_update(data)
@@ -61,46 +66,60 @@ class Screen:
             return pygame.display.get_desktop_sizes().pop()
         
         
-    def update1(self) -> None:
-        self.screen.fill((0, 0, 0))
+    def fill(self) -> None:
+        self.screen.fill((255, 255, 255))
     
-    def update2(self) -> None:
+    def flip(self) -> None:
         pygame.display.flip()
-    
-def room_selection(screen) -> int:
-    while running == True:
+
+
+def room_selection(screen: Screen, rooms: list[Room]) -> int:
+    nearst: Room = None
+    running = True
+    while running:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
-                running = False 
+                running = False
+            if event.type == pygame.MOUSEBUTTONDOWN:
+                if nearst != None:
+                    running = False
+        screen.fill()
         
-        screen.update1()
+        mouse_x, mouse_y = pygame.mouse.get_pos()
+        for room in rooms:
+            if nearst == None:
+                nearst = room
+            if nearst.distance(mouse_x, mouse_y) > room.distance(mouse_x, mouse_y):
+                nearst = room
         
-        screen.update2()
+        screen.flip()
     return 0
+
 
 def main() -> int:
     pygame.init()
     Online = client.Client(input())
     # Online = client.Client("13.76.138.194")
-    room_list: list[Room] = []
+    rooms: list[Room] = []
     
     screen = Screen()
     # roomlist.append(Room("kitchen"), Room("bedroom"), Room("yard"),Room("study"), Room("liviingroom"))
-    room_list.append(Room("kitchen", screen.info()))
-    for room in room_list:
+    rooms.append(Room("kitchen", screen.info()))
+    for room in rooms:
         room.data_update(Online.datas[room.name])
     running = True
-    
+    font = pygame.font.Font(None, 36)
     Online.send_data(cards=c.draw(Online.cards))
     
-    while running == True:
+    while running:
+        room_selection(screen, font)
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 running = False 
         
-        screen.update1()
+        screen.fill()
         
-        screen.update2()
+        screen.flip()
     return 0
 
 
