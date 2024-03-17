@@ -18,7 +18,7 @@ class Client:
     def __init__(self, server_address: str) -> None:
         self.server_close = False
         self.client_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-        self.server_address = (server_address, 1234)
+        self.server_address = (server_address, 12345)
         self.datas: dict[Datas] = {"kitchen": Datas("kitchen", ["notebook", "food"], ["robin"])}
         self.cards: list[str] = []
         
@@ -94,7 +94,7 @@ class Client:
     
     
 def main() -> int:
-    robin = Client("127.0.0.1")
+    robin = Client("25.42.132.180")
     
     
     

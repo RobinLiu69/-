@@ -37,7 +37,7 @@ class Room:
         try:
             self.items = data.items
             self.players = data.players
-            print("data_update")
+            print("data update")
             return 0
         except Exception as e:
             print(e)
