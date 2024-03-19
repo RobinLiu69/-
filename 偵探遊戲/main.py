@@ -42,7 +42,9 @@ class Room:
         except Exception as e:
             print(e)
             return 1
-
+    
+    def info(self) -> tuple[str, list[str], list[str]]:
+        return self.name, self.items, self.players
         
     def draw(self, surface: pygame.surface.Surface) -> int:
         try:
@@ -95,27 +97,34 @@ def room_selection(screen: Screen, rooms: list[Room]) -> int:
         screen.flip()
     return 0
 
-
-def main() -> int:
+def init():
     pygame.init()
+    screen = Screen()
     Online = client.Client(input())
     # Online = client.Client("13.76.138.194")
     rooms: list[Room] = []
+    return Online, rooms, screen
     
-    screen = Screen()
+    
+def main() -> int:
+    
+    Online, rooms, screen = init()
+    
     # roomlist.append(Room("kitchen"), Room("bedroom"), Room("yard"),Room("study"), Room("liviingroom"))
     rooms.append(Room("kitchen", screen.info()))
     for room in rooms:
         room.data_update(Online.datas[room.name])
+        print(room.info())
     running = True
     font = pygame.font.Font(None, 36)
     Online.send_data(cards=c.draw_card(Online.cards))
     
+    room_selection(screen, rooms)
+    
     while running:
-        room_selection(screen, font)
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
-                running = False 
+                running = False
         
         screen.fill()
         

@@ -19,7 +19,7 @@ class Client:
         self.server_close = False
         self.client_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         self.server_address = (server_address, 40000)
-        self.datas: dict[Datas] = {"kitchen": Datas("kitchen", ["notebook", "food"], ["robin"])}
+        self.datas: dict[Datas] = {}
         self.cards: list[str] = []
         
         while not self.connect(): print("Retrying to connect...")
@@ -38,6 +38,7 @@ class Client:
             return True
         except Exception as e:
             print(e)
+            time.sleep(3)
         except:
             print("Server has not activated, please wait...")
             # self.server_close = True
@@ -50,22 +51,22 @@ class Client:
                 if not data:
                     break
                 data = data.decode('utf-8')
-                
+                print(data)
                 dataRes = re.findall("J->:.+?:<-J", data)
                 cardRes = re.findall("C->:.+?:<-C", data)
                 if dataRes or cardRes:
                     for data in dataRes:
                         try:
                             jsonData = json.loads(data[4:-4:].replace("'", "\""))
-                            self.datas[jsonData["room_name"]] = Datas((jsonData["room_name"], jsonData["items"]), jsonData["players"])
-                        except:
-                            print("Error decoding", data)
+                            self.datas[jsonData["room_name"]] = Datas(jsonData["room_name"], jsonData["items"], jsonData["players"])
+                        except Exception as e:
+                            print("Error decoding", data, e)
                     for data in cardRes:
                         try:
                             jsonData: str = json.loads(data[4:-4:].replace("'", "\""))
-                            self.cards: Datas = jsonData
-                        except:
-                            print("Error decoding", data)
+                            self.cards: list[str] = jsonData
+                        except Exception as e:
+                            print("Error decoding", data, e)
                         
         except Exception as e:
             print(e)
