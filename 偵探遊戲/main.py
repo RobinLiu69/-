@@ -109,7 +109,7 @@ def main() -> int:
         room.data_update(Online.datas[room.name])
     running = True
     font = pygame.font.Font(None, 36)
-    Online.send_data(cards=c.draw(Online.cards))
+    Online.send_data(cards=c.draw_card(Online.cards))
     
     while running:
         room_selection(screen, font)
