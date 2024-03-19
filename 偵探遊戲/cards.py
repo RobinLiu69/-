@@ -67,7 +67,6 @@ class Kill(Card):
     def abiility(self):
         pass
 
-class 
 
 
 hand: list[Card] = []
