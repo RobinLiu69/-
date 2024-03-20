@@ -65,7 +65,7 @@ def enter_room(Online: client.Client, screen: Screen, room: r.Room) -> None:
             if event.type == pygame.MOUSEBUTTONDOWN:
                     ...
         
-        
+        room.update(screen, Online.datas[room.name])
         
     return  None
     
@@ -80,7 +80,9 @@ def main() -> int:
         print(room.info())
     running = True
     
-    Online.send_data(cards=c.draw_card(Online.cards))
+    
+    for i in range(5):
+        Online.send_data(cards=c.draw_card(Online.cards))
     
     the_room = room_selection(screen, rooms)
     

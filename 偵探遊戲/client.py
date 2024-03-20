@@ -19,7 +19,7 @@ class Client:
         self.server_close = False
         self.client_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         self.server_address = (server_address, 40000)
-        self.datas: dict[Datas] = {}
+        self.datas: dict[Datas, str] = {}
         self.cards: list[str] = []
         
         while not self.connect(): print("Retrying to connect...")

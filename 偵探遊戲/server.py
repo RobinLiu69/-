@@ -26,7 +26,7 @@ class Server:
         print('Waiting clients to connect...')
         self.clients: list[socket.socket] = []
         self.cards: list[str] = cards
-        self.datas: dict[Datas] = datas
+        self.datas: dict[Datas, str] = datas
         self.find_client()
         
     def handle_client(self, client_socket: socket.socket) -> None:
