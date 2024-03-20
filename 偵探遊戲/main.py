@@ -12,7 +12,7 @@ class Screen:
         if self.width/self.height != 1.6:
             self.resize()
         self.screen = pygame.display.set_mode((self.width, self.height))
-        pygame.display.set_caption("nunu")
+        pygame.display.set_caption("Detective Game")
     
     def resize(self):
         for i in range(1000, self.width):
@@ -42,7 +42,7 @@ def init():
     return Online, rooms, screen
 
 
-def room_selection(screen: Screen, rooms: list[r.Room]) -> r.Room:
+def room_selection(screen: Screen, rooms: list[r.Room], room_map: r.Map) -> r.Room:
     nearst: r.Room = None
     running = True
     while running:
@@ -55,11 +55,7 @@ def room_selection(screen: Screen, rooms: list[r.Room]) -> r.Room:
         screen.fill()
         
         mouse_x, mouse_y = pygame.mouse.get_pos()
-        for room in rooms:
-            if nearst == None:
-                nearst = room
-            if nearst.distance(mouse_x, mouse_y) > room.distance(mouse_x, mouse_y):
-                nearst = room
+        nearst = room_map.detect(mouse_x, mouse_y)
         
         screen.flip()
     return nearst
@@ -85,8 +81,8 @@ def main() -> int:
     Online, rooms, screen = init()
     
     # roomlist.append(Room("kitchen"), Room("bedroom"), Room("yard"),Room("study"), Room("liviingroom"))
-    room_map = r.Map(screen.info(), (screen.width/1.5, screen.height/1.5))
     rooms.append(r.Room("kitchen", screen.info()))
+    room_map = r.Map(screen.info(), (screen.width/1.5, screen.height/1.5), rooms)
     for room in rooms:
         room.data_update(Online.datas[room.name])
         print(room.info())

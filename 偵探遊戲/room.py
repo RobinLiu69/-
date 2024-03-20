@@ -12,7 +12,7 @@ class Room:
         self.height = size[1]
         self.imageOriginal = pygame.Surface((self.width, self.height))
         self.imageOriginal.fill((255,255,255))
-        self.imageOriginal.blit(source = pygame.transform.scale(pygame.image.load(path.join("偵太遊戲/image/"+room_name+".png")).convert_alpha(),(180, 180)), dest = (0,0))
+        self.imageOriginal.blit(source = pygame.transform.scale(pygame.image.load(path.join("偵探遊戲/image/"+room_name+".png")).convert_alpha(),(180, 180)), dest = (0,0))
         self.imageOriginal.set_colorkey((255,255,255))
         self.image = self.imageOriginal.copy()
     
@@ -45,28 +45,33 @@ class Room:
             return 1
         
 class Map:
-    def __init__(self, screen_info: tuple[int, int]=(0, 0), size: tuple[int, int]=(0, 0)) -> None:
+    def __init__(self, screen_info: tuple[int, int]=(0, 0), size: tuple[int, int]=(0, 0), rooms: Room=None) -> None:
         self.x = screen_info[0]/2-size[0]
         self.y = screen_info[1]/2-size[1]
         self.width = size[0]
         self.height = size[1]
+        self.room_list: list[Room] = rooms
         self.imageOriginal = pygame.Surface((self.width, self.height))
         self.imageOriginal.fill((255,255,255))
-        self.imageOriginal.blit(source = pygame.transform.scale(pygame.image.load(path.join("/image/地圖.png")).convert_alpha(),(180, 180)), dest = (0,0))
+        self.imageOriginal.blit(source = pygame.transform.scale(pygame.image.load(path.join("偵探遊戲/image/地圖.png")).convert_alpha(),(180, 180)), dest = (0,0))
         self.imageOriginal.set_colorkey((255,255,255))
         self.image = self.imageOriginal.copy()
 
-    def distance(self, x: int, y: int) -> float:
-        dx = x - self.x
-        dy = y - self.y
+    def distance(self, x: int, y: int, room: Room) -> float:
+        dx = x - room.x
+        dy = y - room.y
         return (dx**2+dy**2)**0.5
     
     def update(self, surface: pygame.surface.Surface, data: client.Datas) -> None:
         self.draw(surface)
     
-    
-    def info(self) -> tuple[str, list[str], list[str]]:
-        return self.name, self.items, self.players
+    def detect(self, x: int, y: int, screen_info: tuple[int, int]) -> Room:
+        nearst = None
+        for room in self.room_list:
+            if nearst == None and self.distance(x, y, room) < screen_info[0]/100: nearst = room
+            if self.distance(x, y, room) < self.distance(x, y, nearst):
+                nearst = room
+            
         
     def draw(self, surface: pygame.surface.Surface) -> int:
         try:
@@ -75,4 +80,3 @@ class Map:
         except Exception as e:
             print(e)
             return 1
-    
