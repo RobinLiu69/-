@@ -2,10 +2,10 @@ import pygame, client
 from os import path
 
 class Room:
-    def __init__(self, room_name: str, size: tuple[int, int]) -> None:
+    def __init__(self, room_name: str, size: tuple[int, int], x: int, y: int) -> None:
         self.name = room_name
-        self.x = 0
-        self.y = 0
+        self.x = x
+        self.y = y
         self.items = []
         self.players = []
         self.width = size[0]
@@ -69,9 +69,8 @@ class Map:
         nearst = None
         for room in self.room_list:
             if nearst == None and self.distance(x, y, room) < screen_info[0]/100: nearst = room
-            if self.distance(x, y, room) < self.distance(x, y, nearst):
-                nearst = room
-            
+            elif self.distance(x, y, room) < self.distance(x, y, nearst)  and self.distance(x, y, room) < screen_info[0]/100: nearst = room
+        return nearst
         
     def draw(self, surface: pygame.surface.Surface) -> int:
         try:
