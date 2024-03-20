@@ -9,9 +9,17 @@ class Screen:
     def __init__(self, width: int=None, height: int=None) -> None:
         self.width, self.height = width, height
         self.width, self.height = self.info()
+        if self.width/self.height != 1.6:
+            self.resize()
         self.screen = pygame.display.set_mode((self.width, self.height))
         pygame.display.set_caption("nunu")
-        
+    
+    def resize(self):
+        for i in range(1000, self.width):
+            for j in range(900, self.height):
+                if i/j == 1.6:
+                    self.width, self.height = i, j
+    
     def info(self) -> tuple[int, int]:
         try:
             return self.width/1, self.height/1
@@ -27,8 +35,8 @@ class Screen:
 
 def init():
     pygame.init()
-    screen = Screen()
     Online = client.Client(input())
+    screen = Screen()
     # Online = client.Client("13.76.138.194")
     rooms: list[r.Room] = []
     return Online, rooms, screen
@@ -64,9 +72,12 @@ def enter_room(Online: client.Client, screen: Screen, room: r.Room) -> None:
                 running = False
             if event.type == pygame.MOUSEBUTTONDOWN:
                     ...
+        screen.fill()
         
         room.update(screen, Online.datas[room.name])
-        
+       
+       
+        screen.flip()
     return  None
     
 def main() -> int:
@@ -74,18 +85,21 @@ def main() -> int:
     Online, rooms, screen = init()
     
     # roomlist.append(Room("kitchen"), Room("bedroom"), Room("yard"),Room("study"), Room("liviingroom"))
+    room_map = r.Map(screen.info(), (screen.width/1.5, screen.height/1.5))
     rooms.append(r.Room("kitchen", screen.info()))
     for room in rooms:
         room.data_update(Online.datas[room.name])
         print(room.info())
-    running = True
+    
     
     
     for i in range(5):
         Online.send_data(cards=c.draw_card(Online.cards))
     
+    print("selecting rooms...")
     the_room = room_selection(screen, rooms)
     
+    print("entering the room...")
     enter_room(Online, screen, the_room)
 
 

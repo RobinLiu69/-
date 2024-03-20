@@ -12,14 +12,9 @@ class Room:
         self.height = size[1]
         self.imageOriginal = pygame.Surface((self.width, self.height))
         self.imageOriginal.fill((255,255,255))
-        self.imageOriginal.blit(source = pygame.transform.scale(pygame.image.load(path.join("image/"+room_name+".png")).convert_alpha(),(180, 180)), dest = (0,0))
+        self.imageOriginal.blit(source = pygame.transform.scale(pygame.image.load(path.join("偵太遊戲/image/"+room_name+".png")).convert_alpha(),(180, 180)), dest = (0,0))
         self.imageOriginal.set_colorkey((255,255,255))
         self.image = self.imageOriginal.copy()
-
-    def distance(self, x: int, y: int) -> float:
-        dx = x - self.x
-        dy = y - self.y
-        return (dx**2+dy**2)**0.5
     
     def update(self, surface: pygame.surface.Surface, data: client.Datas) -> None:
         self.draw(surface)
@@ -48,4 +43,36 @@ class Room:
         except Exception as e:
             print(e)
             return 1
-Room()
+        
+class Map:
+    def __init__(self, screen_info: tuple[int, int]=(0, 0), size: tuple[int, int]=(0, 0)) -> None:
+        self.x = screen_info[0]/2-size[0]
+        self.y = screen_info[1]/2-size[1]
+        self.width = size[0]
+        self.height = size[1]
+        self.imageOriginal = pygame.Surface((self.width, self.height))
+        self.imageOriginal.fill((255,255,255))
+        self.imageOriginal.blit(source = pygame.transform.scale(pygame.image.load(path.join("/image/地圖.png")).convert_alpha(),(180, 180)), dest = (0,0))
+        self.imageOriginal.set_colorkey((255,255,255))
+        self.image = self.imageOriginal.copy()
+
+    def distance(self, x: int, y: int) -> float:
+        dx = x - self.x
+        dy = y - self.y
+        return (dx**2+dy**2)**0.5
+    
+    def update(self, surface: pygame.surface.Surface, data: client.Datas) -> None:
+        self.draw(surface)
+    
+    
+    def info(self) -> tuple[str, list[str], list[str]]:
+        return self.name, self.items, self.players
+        
+    def draw(self, surface: pygame.surface.Surface) -> int:
+        try:
+            surface.blit(self.image, (self.x,self.y))
+            return 0
+        except Exception as e:
+            print(e)
+            return 1
+    
