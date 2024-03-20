@@ -8,15 +8,15 @@ def draw_card(cards: list[str]) -> list[str]:
     return cards
 
 
-def deal_used_card():
-    if inusing != None:
-        inusing.ability()
-    
+
+
+
 
 class Card:
     def __init__(self, size: float, name: str, x: int=1 , y: int= 1) -> None:
         self.width = size
-        self.height = size
+        self.height = size, path
+
         self.x = x
         self.y = y
         self.name = name
@@ -28,7 +28,8 @@ class Card:
 
         self.ab = False
     def use(self, mouse_x, mouse_y):
-            global inusing
+            global inusing, path
+
             if self.touch(mouse_x, mouse_y) == 1:
                 inusing = self  
                 

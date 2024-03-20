@@ -1,58 +1,9 @@
 import pygame
-import client, server, threading
+import client, server
 import cards as c
+import room as r
 from os import path
-import types
 
-
-
-class Room:
-    def __init__(self, room_name: str, size: tuple[int, int]) -> None:
-        self.name = room_name
-        self.x = 0
-        self.y = 0
-        self.items = []
-        self.players = []
-        self.width = size[0]
-        self.height = size[1]
-        self.imageOriginal = pygame.Surface((self.width, self.height))
-        self.imageOriginal.fill((255,255,255))
-        self.imageOriginal.blit(source = pygame.transform.scale(pygame.image.load(path.join("image/"+room_name+".png")).convert_alpha(),(180, 180)), dest = (0,0))
-        self.imageOriginal.set_colorkey((255,255,255))
-        self.image = self.imageOriginal.copy()
-
-    def distance(self, x: int, y: int) -> float:
-        dx = x - self.x
-        dy = y - self.y
-        return (dx**2+dy**2)**0.5
-    
-    def update(self, surface: pygame.surface.Surface, data: client.Datas) -> None:
-        self.draw(surface)
-        self.data_update(data)
-    
-    def change(self, online: client.Client):
-        online.send_data(self.name, self.items, self.players)
-    
-    def data_update(self, data: client.Datas) -> int:
-        try:
-            self.items = data.items
-            self.players = data.players
-            print("data update")
-            return 0
-        except Exception as e:
-            print(e)
-            return 1
-    
-    def info(self) -> tuple[str, list[str], list[str]]:
-        return self.name, self.items, self.players
-        
-    def draw(self, surface: pygame.surface.Surface) -> int:
-        try:
-            surface.blit(self.image, (self.x,self.y))
-            return 0
-        except Exception as e:
-            print(e)
-            return 1
 
 class Screen:
     def __init__(self, width: int=None, height: int=None) -> None:
@@ -74,9 +25,17 @@ class Screen:
     def flip(self) -> None:
         pygame.display.flip()
 
+def init():
+    pygame.init()
+    screen = Screen()
+    Online = client.Client(input())
+    # Online = client.Client("13.76.138.194")
+    rooms: list[r.Room] = []
+    return Online, rooms, screen
 
-def room_selection(screen: Screen, rooms: list[Room]) -> int:
-    nearst: Room = None
+
+def room_selection(screen: Screen, rooms: list[r.Room]) -> r.Room:
+    nearst: r.Room = None
     running = True
     while running:
         for event in pygame.event.get():
@@ -95,41 +54,37 @@ def room_selection(screen: Screen, rooms: list[Room]) -> int:
                 nearst = room
         
         screen.flip()
-    return 0
-
-def init():
-    pygame.init()
-    screen = Screen()
-    Online = client.Client(input())
-    # Online = client.Client("13.76.138.194")
-    rooms: list[Room] = []
-    return Online, rooms, screen
+    return nearst
     
+def enter_room(Online: client.Client, screen: Screen, room: r.Room) -> None:
+    running = True
+    while running:
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                running = False
+            if event.type == pygame.MOUSEBUTTONDOWN:
+                    ...
+        
+        
+        
+    return  None
     
 def main() -> int:
     
     Online, rooms, screen = init()
     
     # roomlist.append(Room("kitchen"), Room("bedroom"), Room("yard"),Room("study"), Room("liviingroom"))
-    rooms.append(Room("kitchen", screen.info()))
+    rooms.append(r.Room("kitchen", screen.info()))
     for room in rooms:
         room.data_update(Online.datas[room.name])
         print(room.info())
     running = True
-    font = pygame.font.Font(None, 36)
+    
     Online.send_data(cards=c.draw_card(Online.cards))
     
-    room_selection(screen, rooms)
+    the_room = room_selection(screen, rooms)
     
-    while running:
-        for event in pygame.event.get():
-            if event.type == pygame.QUIT:
-                running = False
-        
-        screen.fill()
-        
-        screen.flip()
-    return 0
+    enter_room(Online, screen, the_room)
 
 
 
