@@ -11,7 +11,6 @@ def draw_card(cards: list[str]) -> list[str]:
 
 
 
-
 class Card:
     def __init__(self, size: float, name: str, x: int=1 , y: int= 1) -> None:
         self.width = size
@@ -28,10 +27,11 @@ class Card:
 
         self.ab = False
     def use(self, mouse_x, mouse_y):
-            global inusing, path
-
+            global inusing, path         
             if self.touch(mouse_x, mouse_y) == 1:
-                inusing = self  
+                inusing = self 
+                for times in range(20):
+                    self.y += 1
                 
     def update(self, surface: pygame.surface.Surface) -> None:
         self.draw(surface)

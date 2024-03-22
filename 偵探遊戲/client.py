@@ -51,7 +51,6 @@ class Client:
                 if not data:
                     break
                 data = data.decode('utf-8')
-                print(data)
                 dataRes = re.findall("J->:.+?:<-J", data)
                 cardRes = re.findall("C->:.+?:<-C", data)
                 if dataRes or cardRes:
@@ -63,6 +62,7 @@ class Client:
                             print("Error decoding", data, e)
                     for data in cardRes:
                         try:
+                            print(data)
                             jsonData: str = json.loads(data[4:-4:].replace("'", "\""))
                             self.cards: list[str] = jsonData
                         except Exception as e:

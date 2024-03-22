@@ -28,7 +28,7 @@ class Screen:
         
         
     def fill(self) -> None:
-        self.screen.fill((255, 255, 255))
+        self.screen.fill((0, 0, 0))
     
     def flip(self) -> None:
         pygame.display.flip()
@@ -55,7 +55,9 @@ def room_selection(screen: Screen, rooms: list[r.Room], room_map: r.Map) -> r.Ro
         screen.fill()
         
         mouse_x, mouse_y = pygame.mouse.get_pos()
-        nearst = room_map.detect(mouse_x, mouse_y)
+        nearst = room_map.detect(mouse_x, mouse_y, screen.info())
+        
+        room_map.update(screen.screen)
         
         screen.flip()
     return nearst
@@ -70,7 +72,7 @@ def enter_room(Online: client.Client, screen: Screen, room: r.Room) -> None:
                     ...
         screen.fill()
         
-        room.update(screen, Online.datas[room.name])
+        room.update(screen.screen, Online.datas[room.name])
        
        
         screen.flip()
@@ -81,19 +83,22 @@ def main() -> int:
     Online, rooms, screen = init()
     
     # roomlist.append(Room("kitchen"), Room("bedroom"), Room("yard"),Room("study"), Room("liviingroom"))
-    rooms.append(r.Room("kitchen", screen.info()))
-    room_map = r.Map(screen.info(), (screen.width/1.5, screen.height/1.5), rooms)
+    rooms.append(r.Room("kitchen", screen.info(), screen.width/1.5, screen.height/1.5))
+    room_map = r.Map(screen.info(), (screen.width, screen.height), rooms)
     for room in rooms:
         room.data_update(Online.datas[room.name])
         print(room.info())
     
     
+    try:
+        for i in range(5):
+            Online.send_data(cards=c.draw_card(Online.cards))
+    except:
+        print("card list empty")
     
-    for i in range(5):
-        Online.send_data(cards=c.draw_card(Online.cards))
     
     print("selecting rooms...")
-    the_room = room_selection(screen, rooms)
+    the_room = room_selection(screen, rooms, room_map)
     
     print("entering the room...")
     enter_room(Online, screen, the_room)
