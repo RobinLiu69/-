@@ -3,6 +3,7 @@ import client, server
 import cards as c
 import room as r
 from os import path
+from pwn import log
 
 
 class Screen:
