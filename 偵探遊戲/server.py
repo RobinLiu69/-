@@ -1,6 +1,6 @@
 import socket, json, re
 import threading
-from pwn import *
+from pwn import log
 
 class Datas:
     def __init__(self, name: str, items: list[str]=[], players: list[str]=[]) -> None:
@@ -113,5 +113,5 @@ class Server:
             self.server_socket.close()
             
 if __name__ == "__main__":
-    server = Server(cards=["Take", "Kill"], datas={"kitchen": Datas("kitchen", ["Take", "Kill"], ["robin"])})
+    server = Server(cards=["Take", "Kill"], datas={"kitchen": Datas("kitchen", ["Take", "Kill", "Take", "Kill", "Take", "Kill", "Take", "Kill", "Take", "Kill", "Take", "Kill", "Take", "Kill", "Take", "Kill"], ["robin"])})
     server.server_socket.close()

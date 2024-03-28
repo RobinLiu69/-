@@ -12,7 +12,7 @@ def draw_card(cards: list[str], hand: list["Card"]) -> list[str]:
 def init_card(cards: list[str], screen_info: tuple[int, int]) -> list["Card"]:
     temp = []
     for card in cards:
-        print(f"{card}({screen_info[0]/10})", type(eval(f"{card}({screen_info[0]/10})")))
+        # print(f"{card}({screen_info[0]/10})", type(eval(f"{card}({screen_info[0]/10})")))
         temp.append(eval(f"{card}({screen_info[0]/10})"))
     return temp
 
@@ -34,13 +34,14 @@ class Card:
         
     def update(self, surface: pygame.surface.Surface, screen_info: tuple[int, int], type: str, index: int=0, len: int=0) -> None:
         if type == "hand":
-            self.x = screen_info[0]/(len+2)*index
+            self.x = screen_info[0]//2 - self.width*1.2*(1+len//2) + self.width*1.2*(len//2)*index
             self.y = screen_info[1]/10*7
             self.draw(surface)
-        # else:
-        #     self.x = screen_info[0]/len*index
-        #     self.y = screen_info[1]/10*9
-        #     self.draw(surface)
+        elif type == "item":
+            yp = (index-1)//5
+            self.x = screen_info[0]//2 - self.width*1.2*2.5 + self.width*1.2*((index-1)%5)
+            self.y = screen_info[1]/10 + self.height*1.1*(yp)
+            self.draw(surface)
         
         
     def touch(self, mouse_x: int, mouse_y: int) -> int:
@@ -74,5 +75,3 @@ class Kill(Card):
         super().__init__(size, "謀殺", x, y)
     def abiility(self):
         pass
-
-inusing: Card = None

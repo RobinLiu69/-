@@ -1,6 +1,6 @@
 import socket, json, re
 import threading, time
-from pwn import *
+from pwn import log
 
 class Datas:
     def __init__(self, name: str, items: list[str]=[], players: list[str]=[]) -> None:

@@ -121,17 +121,16 @@ def main() -> int:
             cards, hand = c.draw_card(Online.cards, hand)
             Online.send_data(cards=cards)
     except:
-        print("card list empty")
+        log.success("card list empty")
     
     
-    # print("selecting rooms...")
-    # the_room = room_selection(screen, rooms, room_map, hand)
-    hand = ["Take", "Kill"]
+    log.success("selecting rooms...")
+    the_room = room_selection(screen, rooms, room_map, hand)
     
     the_room = rooms[0]
     
     
-    print("entering the room...")
+    log.success("entering the room...")
     if the_room != None:
         enter_room(Online, screen, the_room, hand)
 
