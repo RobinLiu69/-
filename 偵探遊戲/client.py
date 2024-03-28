@@ -1,5 +1,6 @@
 import socket, json, re
 import threading, time
+from pwn import *
 
 class Datas:
     def __init__(self, name: str, items: list[str]=[], players: list[str]=[]) -> None:
@@ -16,31 +17,33 @@ class Datas:
 
 class Client:
     def __init__(self, server_address: str) -> None:
+        log.success("Client initialized")
         self.server_close = False
         self.client_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         self.server_address = (server_address, 40000)
         self.datas: dict[Datas, str] = {}
         self.cards: list[str] = []
         
-        while not self.connect(): print("Retrying to connect...")
+        while not self.connect(): log.success("Retrying to connect...")
 
     def connect(self) -> bool:
-        print("Trying to connect to server...")
+        time.sleep(1)
+        log.success("Trying to connect to server...")
         try:
             time.sleep(1.5)
             self.client_socket.connect(self.server_address)
             self.receive_thread = threading.Thread(target=self.receive_data, args=[self.client_socket])
             self.receive_thread.start()
-            print("Connected")
+            log.success("Connected")
             return True
         except KeyboardInterrupt:
-            print("\nStop the process")
+            log.success("\nStop the process")
             return True
         except Exception as e:
             print(e)
             time.sleep(3)
         except:
-            print("Server has not activated, please wait...")
+            log.error("Server has not activated, please wait...")
             # self.server_close = True
             return False
         
@@ -62,7 +65,6 @@ class Client:
                             print("Error decoding", data, e)
                     for data in cardRes:
                         try:
-                            print(data)
                             jsonData: str = json.loads(data[4:-4:].replace("'", "\""))
                             self.cards: list[str] = jsonData
                         except Exception as e:
@@ -71,7 +73,7 @@ class Client:
         except Exception as e:
             print(e)
             if str(e) != "[WinError 10053] 連線已被您主機上的軟體中止。":
-                print("Server isn't started, relunch the server to connet to it.")
+                log.success("Server isn't started, relunch the server to connet to it.")
             
 
         client_socket.close()
@@ -89,7 +91,7 @@ class Client:
             return True
         except Exception as e:
             print(e)
-            print("Server are closed.")
+            log.success("Server are closed.")
             return False
         
     

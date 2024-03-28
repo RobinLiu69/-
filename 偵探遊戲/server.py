@@ -1,5 +1,6 @@
 import socket, json, re
 import threading
+from pwn import *
 
 class Datas:
     def __init__(self, name: str, items: list[str]=[], players: list[str]=[]) -> None:
@@ -16,14 +17,15 @@ class Datas:
 
 class Server:
     def __init__(self, cards: list[str]=[], datas: dict[Datas]={}) -> None:
+        log.success("Server initialized")
         self.server_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         self.server_address = ("0.0.0.0", 40000)
         # self.server_address = (socket.gethostbyname(socket.gethostname()), 40000)
         # self.server_address = ("25.61.96.35", 32768)
-        print(f"Server address(IPv4):{self.server_address}")
+        log.success(f"Server address(IPv4):{self.server_address}")
         self.server_socket.bind(self.server_address)
         self.server_socket.listen(8)
-        print('Waiting clients to connect...')
+        log.success('Waiting clients to connect...')
         self.clients: list[socket.socket] = []
         self.cards: list[str] = cards
         self.datas: dict[Datas, str] = datas
@@ -91,7 +93,7 @@ class Server:
             while True:
                 client_socket, client_address = self.server_socket.accept()
                 self.clients.append(client_socket)
-                print(f"Connect from:{client_address}")
+                log.success(f"Connect from:{client_address}")
                 for data in self.datas.items():
                     self.send_data(client_socket, data=data[1])
                 self.send_data(client_socket, cards=self.cards)
@@ -99,7 +101,7 @@ class Server:
                 client_thread.start()
                 
         except KeyboardInterrupt:
-            print("\nServer shut down")
+            log.success("Server shut down")
             self.server_socket.close()
             
         except Exception as e:
@@ -111,5 +113,5 @@ class Server:
             self.server_socket.close()
             
 if __name__ == "__main__":
-    server = Server(cards=["1", "2", "3", "4", "5", "6", "7", "8", "9", "10"], datas={"kitchen": Datas("kitchen", ["notebook", "food"], ["robin"])})
+    server = Server(cards=["Take", "Kill"], datas={"kitchen": Datas("kitchen", ["Take", "Kill"], ["robin"])})
     server.server_socket.close()

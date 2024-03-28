@@ -44,7 +44,7 @@ def init():
     return Online, rooms, screen
 
 
-def room_selection(screen: Screen, rooms: list[r.Room], room_map: r.Map) -> r.Room:
+def room_selection(screen: Screen, rooms: list[r.Room], room_map: r.Map, hand: list[str]) -> r.Room:
     nearst: r.Room = None
     running = True
     while running:
@@ -69,7 +69,12 @@ def room_selection(screen: Screen, rooms: list[r.Room], room_map: r.Map) -> r.Ro
         screen.flip()
     return nearst
     
-def enter_room(Online: client.Client, screen: Screen, room: r.Room) -> None:
+def enter_room(Online: client.Client, screen: Screen, room: r.Room, hand: list[str]) -> None:
+    
+    hand_card = c.init_card(hand, screen.info())
+    item_card = c.init_card(room.items, screen.info())
+    
+    
     running = True
     while running:
         for event in pygame.event.get():
@@ -80,8 +85,16 @@ def enter_room(Online: client.Client, screen: Screen, room: r.Room) -> None:
         screen.fill()
         
         room.update(screen.screen, Online.datas[room.name])
-       
-       
+        
+        
+        
+        for index, card in enumerate(hand_card):
+            card.update(screen.screen, screen.info(), "hand", index+1, len(hand_card))
+
+
+        for index, card in enumerate(item_card):
+            card.update(screen.screen, screen.info(), "item", index+1, len(item_card))
+
         screen.flip()
     return  None
     
@@ -93,29 +106,33 @@ def main() -> int:
     rooms.append(r.Room("kitchen", screen.info(), screen.width*2/5, screen.height/16*11.5))
     
     room_map = r.Map(screen.info(), (screen.width, screen.height), rooms)
+    
     for room in rooms:
         room.data_update(Online.datas[room.name])
         print(room.info())
         
     
     hand: list[str] = []
-    field: list[c.Card] = []
     
     
     try:
         for _ in range(5):
-            cards, hand=c.draw_card(Online.cards, hand)
+            cards, hand = c.draw_card(Online.cards, hand)
             Online.send_data(cards=cards)
     except:
         print("card list empty")
     
     
-    print("selecting rooms...")
-    the_room = room_selection(screen, rooms, room_map)
+    # print("selecting rooms...")
+    # the_room = room_selection(screen, rooms, room_map, hand)
+    hand = ["Take", "Kill"]
+    
+    the_room = rooms[0]
+    
     
     print("entering the room...")
     if the_room != None:
-        enter_room(Online, screen, the_room)
+        enter_room(Online, screen, the_room, hand)
 
 
 

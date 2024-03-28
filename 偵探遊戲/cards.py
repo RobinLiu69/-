@@ -1,5 +1,6 @@
 from os import path
 import pygame
+import room as r
 
 functional_cards = ("放置", "謀殺", "布置現場", "交易", "足跡", "拿取", "檢視")
 
@@ -8,14 +9,16 @@ def draw_card(cards: list[str], hand: list["Card"]) -> list[str]:
     return cards, hand
 
 # 做到一半
-# def init_card(: list[str]):
-#     room_card = []
-#     for card in hand:
-#         room_card.append(card)
+def init_card(cards: list[str], screen_info: tuple[int, int]) -> list["Card"]:
+    temp = []
+    for card in cards:
+        print(f"{card}({screen_info[0]/10})", type(eval(f"{card}({screen_info[0]/10})")))
+        temp.append(eval(f"{card}({screen_info[0]/10})"))
+    return temp
 
 
 class Card:
-    def __init__(self, size: int, name: str, x: int=1 , y: int=1) -> None:
+    def __init__(self, size: int, name: str, x: int=None , y: int=None) -> None:
         self.width = size
         self.height = size
 
@@ -24,21 +27,22 @@ class Card:
         self.name = name
         self.imageOriginal = pygame.Surface((self.width,self.height))
         self.imageOriginal.fill((255,255,255))
-        self.imageOriginal.blit(source = pygame.transform.scale(pygame.image.load(path.join("偵探遊戲/image/"+name+".png")).convert_alpha(),(180, 180)), dest = (0,0))
+        self.imageOriginal.blit(source = pygame.transform.scale(pygame.image.load(path.join("偵探遊戲/image/"+name+".png")).convert_alpha(),(self.width, self.height)), dest = (0,0))
         self.imageOriginal.set_colorkey((255,255,255))
         self.image = self.imageOriginal.copy()
 
         
-    # def use(self, mouse_x, mouse_y):
-    #         global inusing, path         
-    #         if self.touch(mouse_x, mouse_y) == 1:
-    #             inusing = self 
-    #             for times in range(20):
-    #                 self.y += 1
-                
-    def update(self, surface: pygame.surface.Surface) -> None:
-        self.draw(surface)
-
+    def update(self, surface: pygame.surface.Surface, screen_info: tuple[int, int], type: str, index: int=0, len: int=0) -> None:
+        if type == "hand":
+            self.x = screen_info[0]/(len+2)*index
+            self.y = screen_info[1]/10*7
+            self.draw(surface)
+        # else:
+        #     self.x = screen_info[0]/len*index
+        #     self.y = screen_info[1]/10*9
+        #     self.draw(surface)
+        
+        
     def touch(self, mouse_x: int, mouse_y: int) -> int:
         if self.x < mouse_x < self.x + self.width and self.y < mouse_y < self.y + self.height:
             return 1
