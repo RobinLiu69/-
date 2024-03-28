@@ -7,10 +7,11 @@ def draw_card(cards: list[str], hand: list["Card"]) -> list[str]:
     hand.append(cards.pop())
     return cards, hand
 
-def init_card(: list[str]):
-    room_card = []
-    for card in hand:
-        room_card.append(card)
+# 做到一半
+# def init_card(: list[str]):
+#     room_card = []
+#     for card in hand:
+#         room_card.append(card)
 
 
 class Card:
