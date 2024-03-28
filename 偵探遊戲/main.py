@@ -24,7 +24,7 @@ class Screen:
     
     def info(self) -> tuple[int, int]:
         try:
-            return self.width/1, self.height/1
+            return self.width//1, self.height//1
         except:
             return pygame.display.get_desktop_sizes().pop()
         
@@ -47,7 +47,6 @@ def init():
 def room_selection(screen: Screen, rooms: list[r.Room], room_map: r.Map) -> r.Room:
     nearst: r.Room = None
     running = True
-    print(screen.width*2/5, screen.height/16*11.5)
     while running:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
@@ -61,7 +60,7 @@ def room_selection(screen: Screen, rooms: list[r.Room], room_map: r.Map) -> r.Ro
         mouse_x, mouse_y = pygame.mouse.get_pos()
         # print(mouse_x, mouse_y)
         nearst = room_map.detect(mouse_x, mouse_y, screen.info(), rooms, nearst)
-        print(nearst)
+        
         room_map.update(screen.screen)
         
         for room in rooms:
@@ -97,11 +96,16 @@ def main() -> int:
     for room in rooms:
         room.data_update(Online.datas[room.name])
         print(room.info())
+        
+    
+    hand: list[str] = []
+    field: list[c.Card] = []
     
     
     try:
-        for i in range(5):
-            Online.send_data(cards=c.draw_card(Online.cards))
+        for _ in range(5):
+            cards, hand=c.draw_card(Online.cards, hand)
+            Online.send_data(cards=cards)
     except:
         print("card list empty")
     

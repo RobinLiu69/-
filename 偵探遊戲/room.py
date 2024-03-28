@@ -83,7 +83,6 @@ class Map:
                 nearst.hightlight = True
                 
         if nearst != None and self.distance(x, y, nearst) > screen_info[0]/50:
-            print("too far away")
             nearst.hightlight = False
             nearst = None
         

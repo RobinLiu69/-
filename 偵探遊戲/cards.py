@@ -3,18 +3,20 @@ import pygame
 
 functional_cards = ("放置","謀殺", "布置現場","交易","足跡","拿取","檢視")
 
-def draw_card(cards: list[str]) -> list[str]:
+def draw_card(cards: list[str], hand: list["Card"]) -> list[str]:
     hand.append(cards.pop())
-    return cards
+    return cards, hand
 
-
-
+def init_card(: list[str]):
+    room_card = []
+    for card in hand:
+        room_card.append(card)
 
 
 class Card:
-    def __init__(self, size: float, name: str, x: int=1 , y: int= 1) -> None:
+    def __init__(self, size: int, name: str, x: int=1 , y: int=1) -> None:
         self.width = size
-        self.height = size, path
+        self.height = size
 
         self.x = x
         self.y = y
@@ -25,13 +27,13 @@ class Card:
         self.imageOriginal.set_colorkey((255,255,255))
         self.image = self.imageOriginal.copy()
 
-        self.ab = False
-    def use(self, mouse_x, mouse_y):
-            global inusing, path         
-            if self.touch(mouse_x, mouse_y) == 1:
-                inusing = self 
-                for times in range(20):
-                    self.y += 1
+        
+    # def use(self, mouse_x, mouse_y):
+    #         global inusing, path         
+    #         if self.touch(mouse_x, mouse_y) == 1:
+    #             inusing = self 
+    #             for times in range(20):
+    #                 self.y += 1
                 
     def update(self, surface: pygame.surface.Surface) -> None:
         self.draw(surface)
@@ -49,7 +51,7 @@ class Card:
 
 
 class Take(Card):
-    def __init__(self, size: float, x: int=1, y: int=1) -> None:
+    def __init__(self, size: int, x: int=1, y: int=1) -> None:
         super().__init__(size, "拿取", x, y)
     
     def ability(self):
@@ -68,9 +70,4 @@ class Kill(Card):
     def abiility(self):
         pass
 
-
-
-hand: list[Card] = []
-items: list[Card] = []
-feild: list[Card] = []
 inusing: Card = None
