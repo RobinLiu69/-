@@ -1,7 +1,7 @@
 from os import path
 import pygame
 
-functional_cards = ("放置","謀殺", "布置現場","交易","足跡","拿取","檢視")
+functional_cards = ("放置", "謀殺", "布置現場", "交易", "足跡", "拿取", "檢視")
 
 def draw_card(cards: list[str], hand: list["Card"]) -> list[str]:
     hand.append(cards.pop())
