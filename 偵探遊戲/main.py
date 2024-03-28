@@ -6,6 +6,7 @@ from os import path
 from pwn import log
 
 
+
 class Screen:
     def __init__(self, width: int=None, height: int=None) -> None:
         self.width, self.height = width, height
