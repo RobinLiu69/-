@@ -23,7 +23,8 @@ class Screen:
             for j in range(900, self.height):
                 if i/j == 1.6:
                     self.width, self.height = i, j
-    
+
+
     def info(self) -> tuple[int, int]:
         try:
             return self.width//1, self.height//1
@@ -76,6 +77,7 @@ def enter_room(Online: client.Client, screen: Screen, room: r.Room, hand: list[s
     hand_card = c.init_card(hand, screen.info())
     item_card = c.init_card(room.items, screen.info())
     
+    using_card: c.Card = None
     
     running = True
     while running:
@@ -83,19 +85,24 @@ def enter_room(Online: client.Client, screen: Screen, room: r.Room, hand: list[s
             if event.type == pygame.QUIT:
                 running = False
             if event.type == pygame.MOUSEBUTTONDOWN:
-                    ...
+                for card in hand_card+item_card:
+                    if card.touching:
+                        using_card = card
+                        break
         screen.fill()
+        
+        mouse_x, mouse_y = pygame.mouse.get_pos()
         
         room.update(screen.screen, Online.datas[room.name])
         
         
-        
         for index, card in enumerate(hand_card):
-            card.update(screen.screen, screen.info(), "hand", index+1, len(hand_card))
+            card.update(screen.screen, screen.info(), "hand", index+1, len(hand_card), mouse_x, mouse_y)
+            
 
 
         for index, card in enumerate(item_card):
-            card.update(screen.screen, screen.info(), "item", index+1, len(item_card))
+            card.update(screen.screen, screen.info(), "item", index+1, len(item_card), mouse_x, mouse_y)
 
         screen.flip()
     return  None
@@ -106,6 +113,10 @@ def main() -> int:
     
     # roomlist.append(Room("kitchen"), Room("bedroom"), Room("yard"),Room("study"), Room("liviingroom"))
     rooms.append(r.Room("kitchen", screen.info(), screen.width*2/5, screen.height/16*11.5))
+    # rooms.append(r.Room("bedroom", screen.info(), screen.width*2/5, screen.height/16*11.5))
+    # rooms.append(r.Room("yard",    en.info(), screen.width*2/5, screen.height/16*11.5))
+    # rooms.append(r.Room("study", screen.info(), screen.width*2/5, screen.height/16*11.5))
+    # rooms.append(r.Room("livingroom", screen.info(), screen.width*2/5, screen.height/16*11.5))
     
     room_map = r.Map(screen.info(), (screen.width, screen.height), rooms)
     
