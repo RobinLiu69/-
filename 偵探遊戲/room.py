@@ -32,8 +32,8 @@ class Room:
     
     def data_update(self, data: client.Datas) -> int:
         try:
-            self.items = data.items
-            self.players = data.players
+            self.items: list[tuple[str, int]] = data.items
+            self.players: list[str] = data.players
             return 0
         except Exception as e:
             print(e)

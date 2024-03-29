@@ -113,5 +113,5 @@ class Server:
             self.server_socket.close()
 
 if __name__ == "__main__":
-    server = Server(cards=[["Take", 1], ["Kill", 2]], datas={"kitchen": Datas("kitchen", ["Take", "Kill", "Take"], ["robin"])})
+    server = Server(cards=[["Take", 1], ["Kill", 2]], datas={"kitchen": Datas("kitchen", [["Take", 3], ["Kill", 4], ["Take", 5]], ["robin"])})
     server.server_socket.close()

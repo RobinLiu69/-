@@ -47,7 +47,7 @@ def init():
     return Online, rooms, screen
 
 
-def room_selection(screen: Screen, rooms: list[r.Room], room_map: r.Map, hand: list[str]) -> r.Room:
+def room_selection(screen: Screen, rooms: list[r.Room], room_map: r.Map, hand: list[tuple[str, int]]) -> r.Room:
     nearst: r.Room = None
     running = True
     while running:
@@ -72,7 +72,7 @@ def room_selection(screen: Screen, rooms: list[r.Room], room_map: r.Map, hand: l
         screen.flip()
     return nearst
     
-def enter_room(Online: client.Client, screen: Screen, room: r.Room, hand: list[str]) -> None:
+def enter_room(Online: client.Client, screen: Screen, room: r.Room, hand: list[tuple[str, int]]) -> None:
     
     hand_card = c.init_card(hand, screen.info())
     item_card = c.init_card(room.items, screen.info())
@@ -94,7 +94,15 @@ def enter_room(Online: client.Client, screen: Screen, room: r.Room, hand: list[s
                 else:
                     for card in hand_card+item_card:
                         if card.touching and card != using_card:
-                            using_card.ability(card, hand, room.items)
+                            if using_card.ability(card, hand, room.items):
+                                print("pass")
+                                using_card.using = False
+                                using_card = None
+                                hand_card = c.init_card(hand, screen.info())
+                                item_card = c.init_card(room.items, screen.info())
+                            else:
+                                using_card.using = False
+                                using_card = None
                             break
                         elif card.touching and card == using_card:
                             using_card.using = False
@@ -157,8 +165,9 @@ def main() -> int:
     
     the_room = rooms[0]
     
-    
+
     log.success("entering the room...")
+    print(hand)
     if the_room != None:
         enter_room(Online, screen, the_room, hand)
 

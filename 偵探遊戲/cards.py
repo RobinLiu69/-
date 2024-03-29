@@ -74,9 +74,20 @@ class Take(Card):
     def __init__(self, size: int, x: int=1, y: int=1, identity: int=0) -> None:
         super().__init__(size, "拿取", x, y, identity)
 
-    def ability(self, card: Card, hand: list[tuple[str, int]], items: list[tuple[str, int]]) -> int:
-        print("fine")
-        
+    def ability(self, selected_Card: Card, hand: list[tuple[str, int]], items: list[tuple[str, int]]) -> int:
+        for index, card in enumerate(items):
+            if card[1] == selected_Card.identity:
+                hand.append(items.pop(index))
+                print("find card with identity")
+                break
+        else:
+            for index, card in enumerate(hand):
+                if self.identity == card[1]:
+                    items.append(hand.pop(index))
+                    break
+            else:
+                return 1
+            return 0
         return 0
         
         
