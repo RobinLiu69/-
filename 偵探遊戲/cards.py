@@ -252,70 +252,70 @@ class Pen(Card):
     def ability(self):
         ...
 
-class Pot(Card):
+class Unused_mask(Card):
     def __init__(self, size: int, x: int=1, y: int=1, identity: int=0) -> None:
         super().__init__(size, "未使用的易容面具", x, y, identity)
 
     def ability(self):
         ...
 
-class Pot(Card):
+class Tracker(Card):
     def __init__(self, size: int, x: int=1, y: int=1, identity: int=0) -> None:
         super().__init__(size, "追蹤器", x, y, identity)
 
     def ability(self):
         ...
 
-class Pot(Card):
+class Whisky(Card):
     def __init__(self, size: int, x: int=1, y: int=1, identity: int=0) -> None:
         super().__init__(size, "威士忌", x, y, identity)
 
     def ability(self):
         ...
 
-class Pot(Card):
+class Flashlight(Card):
     def __init__(self, size: int, x: int=1, y: int=1, identity: int=0) -> None:
         super().__init__(size, "手電筒", x, y, identity)
 
     def ability(self):
         ...
 
-class Pot(Card):
+class Rope(Card):
     def __init__(self, size: int, x: int=1, y: int=1, identity: int=0) -> None:
         super().__init__(size, "繩子", x, y, identity)
 
     def ability(self):
         ...
 
-class Pot(Card):
+class Mud(Card):
     def __init__(self, size: int, x: int=1, y: int=1, identity: int=0) -> None:
         super().__init__(size, "泥巴", x, y, identity)
 
     def ability(self):
         ...
 
-class Pot(Card):
+class Bugging_receiver(Card):
     def __init__(self, size: int, x: int=1, y: int=1, identity: int=0) -> None:
         super().__init__(size, "竊聽筒", x, y, identity)
 
     def ability(self):
         ...
 
-class Pot(Card):
+class Cross(Card):
     def __init__(self, size: int, x: int=1, y: int=1, identity: int=0) -> None:
         super().__init__(size, "十字架", x, y, identity)
 
     def ability(self):
         ...
 
-class Pot(Card):
+class Broom(Card):
     def __init__(self, size: int, x: int=1, y: int=1, identity: int=0) -> None:
         super().__init__(size, "掃把", x, y, identity)
 
     def ability(self):
         ...
 
-class Pot(Card):
+class Coffee_pot(Card):
     def __init__(self, size: int, x: int=1, y: int=1, identity: int=0) -> None:
         super().__init__(size, "咖啡壺", x, y, identity)
 
