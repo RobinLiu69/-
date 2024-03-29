@@ -95,7 +95,6 @@ def enter_room(Online: client.Client, screen: Screen, room: r.Room, hand: list[t
                     for card in hand_card+item_card:
                         if card.touching and card != using_card:
                             if using_card.ability(card, hand, room.items):
-                                print("pass")
                                 using_card.using = False
                                 using_card = None
                                 hand_card = c.init_card(hand, screen.info())
@@ -114,6 +113,14 @@ def enter_room(Online: client.Client, screen: Screen, room: r.Room, hand: list[t
         # item_card = c.init_card(room.items, screen.info())
         
         screen.fill()
+        
+        for card in item_card:
+            for value in room.items:
+                if card.identity == value[1]:
+                    break
+            else:
+                print("update")
+                item_card = c.init_card(room.items, screen.info())
         
         mouse_x, mouse_y = pygame.mouse.get_pos()
         

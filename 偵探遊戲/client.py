@@ -50,7 +50,9 @@ class Client:
     def receive_data(self, client_socket: socket.socket) -> None:
         try:
             while True:
+                print("received data")
                 data:  bytes | bytearray  = client_socket.recv(1024)
+                print(data)
                 if not data:
                     break
                 data = data.decode('utf-8')

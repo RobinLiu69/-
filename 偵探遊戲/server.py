@@ -30,7 +30,7 @@ class Server:
         self.cards: list[list[str, int]] = cards
         self.datas: dict[Datas, str] = datas
         self.find_client()
-        
+
     def handle_client(self, client_socket: socket.socket) -> None:
         try:
             while True:
@@ -57,7 +57,7 @@ class Server:
                             self.cards: Datas = jsonData
                         except:
                             print("Error decoding", data)
-                else:
+                    
                     self.broadcast(data)
         except:
             pass
@@ -66,10 +66,10 @@ class Server:
 
     def broadcast(self, message: str) -> None:
         # print(clients)
-        for client in self.clients[::-1]:
+        for client in self.clients:
             # print(client)
             try:
-                client.sendall(message)
+                client.send(message)
             except Exception as e:
                 # print(e)
                 self.clients.remove(client)
@@ -101,8 +101,8 @@ class Server:
                 client_thread.start()
                 
         except KeyboardInterrupt:
-            log.success("Server shut down")
             self.server_socket.close()
+            log.success("Server shut down")
             
         except Exception as e:
             print(e)

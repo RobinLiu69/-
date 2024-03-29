@@ -23,10 +23,10 @@ class Room:
         else:
             pygame.draw.circle(surface, (150, 150, 10), (self.x, self.y), height/50)
     
-    def update(self, surface: pygame.surface.Surface, data: client.Datas) -> None:
+    def update(self, surface: pygame.surface.Surface, data: client.Datas) -> int:
         self.draw(surface)
         self.data_update(data)
-    
+        
     def change(self, online: client.Client):
         online.send_data(self.name, self.items, self.players)
     

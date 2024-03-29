@@ -76,10 +76,8 @@ class Take(Card):
 
     def ability(self, selected_Card: Card, hand: list[tuple[str, int]], items: list[tuple[str, int]]) -> int:
         for index, card in enumerate(items):
-            print(card, selected_Card.identity)
             if card[1] == selected_Card.identity:
                 hand.append(items.pop(index))
-                print("find card with identity")
                 break
         else:
             print("out")
@@ -90,7 +88,6 @@ class Take(Card):
                 break
         else:
             return 0
-            print("out")
         return 1
         
         
