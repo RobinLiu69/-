@@ -55,7 +55,7 @@ def room_selection(screen: Screen, rooms: list[r.Room], room_map: r.Map, hand: l
             if event.type == pygame.QUIT:
                 running = False
             if event.type == pygame.MOUSEBUTTONDOWN:
-                print("touch")
+                print("clicked")
                 if nearst != None:
                     running = False
         screen.fill()
@@ -85,10 +85,25 @@ def enter_room(Online: client.Client, screen: Screen, room: r.Room, hand: list[s
             if event.type == pygame.QUIT:
                 running = False
             if event.type == pygame.MOUSEBUTTONDOWN:
-                for card in hand_card+item_card:
-                    if card.touching:
-                        using_card = card
-                        break
+                if using_card == None:
+                    for card in hand_card+item_card:
+                        if card.touching:
+                            using_card = card
+                            using_card.using = True
+                            break
+                else:
+                    for card in hand_card+item_card:
+                        if card.touching and card != using_card:
+                            using_card.ability(card, hand, room.items)
+                            break
+                        elif card.touching and card == using_card:
+                            using_card.using = False
+                            using_card = None
+                            break
+        
+        # hand_card = c.init_card(hand, screen.info())
+        # item_card = c.init_card(room.items, screen.info())
+        
         screen.fill()
         
         mouse_x, mouse_y = pygame.mouse.get_pos()
@@ -99,7 +114,6 @@ def enter_room(Online: client.Client, screen: Screen, room: r.Room, hand: list[s
         for index, card in enumerate(hand_card):
             card.update(screen.screen, screen.info(), "hand", index+1, len(hand_card), mouse_x, mouse_y)
             
-
 
         for index, card in enumerate(item_card):
             card.update(screen.screen, screen.info(), "item", index+1, len(item_card), mouse_x, mouse_y)
@@ -125,7 +139,7 @@ def main() -> int:
         print(room.info())
         
     
-    hand: list[str] = []
+    hand: list[tuple[str, int]] = []
     
     
     try:
@@ -134,6 +148,8 @@ def main() -> int:
             Online.send_data(cards=cards)
     except:
         log.success("card list empty")
+    
+    hand: list[tuple[str, int]] = [("Take", 1), ("Kill", 2)]
     
     
     log.success("selecting rooms...")
