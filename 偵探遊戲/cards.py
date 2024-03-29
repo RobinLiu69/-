@@ -13,7 +13,7 @@ def init_card(cards: list[tuple[str, int]], screen_info: tuple[int, int]) -> lis
     temp = []
     for card in cards:
         # print(f"{card}({screen_info[0]/10})", type(eval(f"{card}({screen_info[0]/10})")))
-        temp.append(eval(f"{card[0]}({screen_info[0]/10}, {card[1]})"))
+        temp.append(eval(f"{card[0]}({screen_info[0]/10}, identity={card[1]})"))
     return temp
 
 
@@ -36,7 +36,7 @@ class Card:
     def update(self, surface: pygame.surface.Surface, screen_info: tuple[int, int], type: str, index: int=0, len: int=0, mouse_x: int=0, mouse_y: int=0) -> None:
         self.touching = self.touch(mouse_x, mouse_y)
         if type == "hand":
-            self.x = screen_info[0]//2 - self.width*1.2*(1+len//2) + self.width*1.2*(len//2)*index
+            self.x = screen_info[0]//2 - self.width*1.1*(1+len//2) + self.width*1.1*index
             if self.touching or self.using: self.y = screen_info[1]/10*7 - self.height*0.6
             else: self.y = screen_info[1]/10*7
             self.draw(surface)
@@ -76,19 +76,22 @@ class Take(Card):
 
     def ability(self, selected_Card: Card, hand: list[tuple[str, int]], items: list[tuple[str, int]]) -> int:
         for index, card in enumerate(items):
+            print(card, selected_Card.identity)
             if card[1] == selected_Card.identity:
                 hand.append(items.pop(index))
                 print("find card with identity")
                 break
         else:
-            for index, card in enumerate(hand):
-                if self.identity == card[1]:
-                    items.append(hand.pop(index))
-                    break
-            else:
-                return 1
+            print("out")
             return 0
-        return 0
+        for index, card in enumerate(hand):
+            if self.identity == card[1]:
+                items.append(hand.pop(index))
+                break
+        else:
+            return 0
+            print("out")
+        return 1
         
         
     

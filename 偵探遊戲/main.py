@@ -100,6 +100,7 @@ def enter_room(Online: client.Client, screen: Screen, room: r.Room, hand: list[t
                                 using_card = None
                                 hand_card = c.init_card(hand, screen.info())
                                 item_card = c.init_card(room.items, screen.info())
+                                room.change(Online)
                             else:
                                 using_card.using = False
                                 using_card = None
@@ -157,7 +158,7 @@ def main() -> int:
     except:
         log.success("card list empty")
     
-    hand: list[tuple[str, int]] = [("Take", 1), ("Kill", 2)]
+    hand: list[tuple[str, int]] = [("Take", 100), ("Take", 102), ("Take", 101), ("Take", 103)]
     
     
     log.success("selecting rooms...")

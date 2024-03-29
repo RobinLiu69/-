@@ -83,7 +83,7 @@ class Client:
             if room_name != None:
                 data = {"room_name" : room_name, "items" : items, "players" : players}
             
-                self.client_socket.send(f"J->:{data}:<-J".encode('utf-8'))
+                self.client_socket.send(f"J->:{data}:<-J".translate(str.maketrans("()", "[]")).encode('utf-8'))
             elif cards != None:
                 self.client_socket.send(f"C->:{cards}:<-C".encode('utf-8'))
             else:
