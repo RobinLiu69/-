@@ -58,20 +58,18 @@ class Server:
                         except:
                             print("Error decoding", data)
                     
-                    self.broadcast(data)
+                    self.broadcast()
         except:
             pass
 
         client_socket.close()
 
-    def broadcast(self, message: str) -> None:
-        # print(clients)
+    def broadcast(self) -> None:
         for client in self.clients:
-            # print(client)
             try:
-                client.send(message)
+                for data in self.datas.items():
+                    self.send_data(client, data=data[1])
             except Exception as e:
-                # print(e)
                 self.clients.remove(client)
                 
     def send_data(self, client_socket: socket.socket, data:Datas = None, cards: list[str]=None) -> bool:
@@ -85,7 +83,6 @@ class Server:
             return True
         except Exception as e:
             print(e)
-            print("Server are closed.")
             return False
         
     def find_client(self) -> None:

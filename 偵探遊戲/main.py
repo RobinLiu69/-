@@ -175,7 +175,6 @@ def main() -> int:
     
 
     log.success("entering the room...")
-    print(hand)
     if the_room != None:
         enter_room(Online, screen, the_room, hand)
 

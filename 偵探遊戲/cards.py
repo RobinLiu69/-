@@ -80,7 +80,6 @@ class Take(Card):
                 hand.append(items.pop(index))
                 break
         else:
-            print("out")
             return 0
         for index, card in enumerate(hand):
             if self.identity == card[1]:
