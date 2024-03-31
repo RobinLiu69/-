@@ -170,7 +170,7 @@ def main() -> int:
     running = True
     
     
-    while running:    
+    while running:
         try:
             for _ in range(5):
                 cards, hand = c.draw_card(Online.cards, hand)
