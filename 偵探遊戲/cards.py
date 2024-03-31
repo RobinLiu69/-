@@ -37,20 +37,20 @@ class Card:
         self.touching = self.touch(mouse_x, mouse_y)
         if type == "hand":
             self.x = screen_info[0]//2 - self.width*1.1*(1+len//2) + self.width*1.1*index
-            if self.touching or self.using: self.y = screen_info[1]/10*7 - self.height*0.6
+            if self.touching or self.using: self.y = screen_info[1]/10*7 - self.height*0.3
             else: self.y = screen_info[1]/10*7
             self.draw(surface)
         elif type == "item":
             yp = (index-1)//5
             self.x = screen_info[0]//2 - self.width*1.2*2.5 + self.width*1.2*((index-1)%5)
-            if self.touching or self.using: self.y = screen_info[1]/10 + self.height*1.1*(yp) - self.height*0.6
+            if self.touching or self.using: self.y = screen_info[1]/10 + self.height*1.1*(yp) - self.height*0.3
             else: self.y = screen_info[1]/10 + self.height*1.1*(yp)
             self.draw(surface)
         
         
     def touch(self, mouse_x: int, mouse_y: int) -> int:
         if not self.touching and self.x < mouse_x < self.x + self.width and self.y < mouse_y < self.y + self.height*1: return 1
-        if self.touching and self.x < mouse_x < self.x + self.width and self.y < mouse_y < self.y + self.height*1.6: return 1
+        if self.touching and self.x < mouse_x < self.x + self.width and self.y < mouse_y < self.y + self.height*1.3: return 1
         else: return 0
     
     def detect(self, mouse_x: int, mouse_y: int) -> bool:
@@ -76,7 +76,7 @@ class Take(Card):
 
     def ability(self, selected_Card: Card, hand: list[tuple[str, int]], items: list[tuple[str, int]]) -> int:
         for index, card in enumerate(items):
-            if card[1] == selected_Card.identity:
+            if card[1] == selected_Card.identity and selected_Card.name not in functional_cards:
                 hand.append(items.pop(index))
                 break
         else:
@@ -95,8 +95,20 @@ class Put_down(Card):
     def __init__(self, size: float, x: int=1, y: int=1, identity: int=0) -> None:
         super().__init__(size, "放置", x, y, identity)
 
-    def ability(self):
-        ...
+    def ability(self, selected_Card: Card, hand: list[tuple[str, int]], items: list[tuple[str, int]]) -> int:
+        for index, card in enumerate(hand):
+            if card[1] == selected_Card.identity and selected_Card.name not in functional_cards:
+                items.append(hand.pop(index))
+                break
+        else:
+            return 0
+        for index, card in enumerate(hand):
+            if self.identity == card[1]:
+                items.append(hand.pop(index))
+                break
+        else:
+            return 0
+        return 1
 
 class Kill(Card):  
     def __init__(self, size: float, x: int=1, y: int=1, identity: int=0) -> None:

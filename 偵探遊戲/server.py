@@ -70,6 +70,7 @@ class Server:
                 for data in self.datas.items():
                     self.send_data(client, data=data[1])
             except Exception as e:
+                print(e)
                 self.clients.remove(client)
                 
     def send_data(self, client_socket: socket.socket, data:Datas = None, cards: list[str]=None) -> bool:
@@ -82,7 +83,7 @@ class Server:
 
             return True
         except Exception as e:
-            print(e)
+            print(e, data)
             return False
         
     def find_client(self) -> None:
@@ -110,5 +111,5 @@ class Server:
             self.server_socket.close()
 
 if __name__ == "__main__":
-    server = Server(cards=[["Take", 1], ["Take", 2]], datas={"kitchen": Datas("kitchen", [["Kill", 3], ["Kill", 4], ["Kill", 5], ["Kill", 6], ["Kill", 7]], ["robin"])})
+    server = Server(cards=[["Take", 1], ["Take", 2]], datas={"kitchen": Datas("kitchen", [["Kinfe", 100], ["Kinfe", 101], ["Kinfe", 102], ["Kinfe", 103], ["Kinfe", 104]], ["robin"])})
     server.server_socket.close()

@@ -6,7 +6,6 @@ from os import path
 from pwn import log
 
 
-
 class Screen:
     def __init__(self, width: int=None, height: int=None) -> None:
         self.width, self.height = width, height
@@ -58,6 +57,12 @@ def room_selection(screen: Screen, rooms: list[r.Room], room_map: r.Map, hand: l
                 print("clicked")
                 if nearst != None:
                     running = False
+        
+        keys = pygame.key.get_pressed()
+        
+        if keys[pygame.K_ESCAPE]:
+            running = False
+            
         screen.fill()
         
         mouse_x, mouse_y = pygame.mouse.get_pos()
@@ -86,7 +91,7 @@ def enter_room(Online: client.Client, screen: Screen, room: r.Room, hand: list[t
                 running = False
             if event.type == pygame.MOUSEBUTTONDOWN:
                 if using_card == None:
-                    for card in hand_card+item_card:
+                    for card in hand_card:
                         if card.touching:
                             using_card = card
                             using_card.using = True
@@ -111,6 +116,12 @@ def enter_room(Online: client.Client, screen: Screen, room: r.Room, hand: list[t
         
         # hand_card = c.init_card(hand, screen.info())
         # item_card = c.init_card(room.items, screen.info())
+        
+        keys = pygame.key.get_pressed()
+        
+        
+        if keys[pygame.K_ESCAPE]:
+            running = False
         
         screen.fill()
         
@@ -156,29 +167,36 @@ def main() -> int:
         
     
     hand: list[tuple[str, int]] = []
+    running = True
     
     
-    try:
-        for _ in range(5):
-            cards, hand = c.draw_card(Online.cards, hand)
-            Online.send_data(cards=cards)
-    except:
-        log.success("card list empty")
-    
-    hand: list[tuple[str, int]] = [("Take", 100), ("Take", 102), ("Take", 101), ("Take", 103)]
-    
-    
-    log.success("selecting rooms...")
-    the_room = room_selection(screen, rooms, room_map, hand)
-    
-    the_room = rooms[0]
-    
+    while running:    
+        try:
+            for _ in range(5):
+                cards, hand = c.draw_card(Online.cards, hand)
+                Online.send_data(cards=cards)
+        except:
+            log.success("Card list empty")
+        
+        hand: list[tuple[str, int]] = [("Take", 1), ("Take", 2), ("Put_down", 3), ("Put_down", 4)]
+        
+        
+        log.success("Selecting rooms...")
+        the_room = room_selection(screen, rooms, room_map, hand)
+        
+        
 
-    log.success("entering the room...")
-    if the_room != None:
-        enter_room(Online, screen, the_room, hand)
+        log.success("Entering the room...")
+        if the_room != None:
+            enter_room(Online, screen, the_room, hand)
+        else:
+            log.success("No room selected")
+            running = False
 
+    return 0
 
 
 if __name__ == "__main__":
     main()
+    log.success("Quit")
+    pygame.quit()
