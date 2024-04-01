@@ -87,6 +87,7 @@ def enter_room(player: Player, screen: Screen, room: r.Room) -> None:
     
     using_card: Card = None
     
+    cards: list[Card] = []
     running = True
     while running:
         for event in pygame.event.get():
@@ -101,20 +102,18 @@ def enter_room(player: Player, screen: Screen, room: r.Room) -> None:
                             break
                 else:
                     for card in player.hand+room.items:
-                        if card.touching and card != using_card:
-                            if using_card.ability(card, player.hand, room.items, mouse_x, mouse_y):
-                                using_card.using = False
-                                using_card = None
-                                room.change(player.Online)
-                            else:
-                                using_card.using = False
-                                using_card = None
-                            break
+                        if card.touching and card != using_card and card not in cards:
+                            cards.append(card)
                         elif card.touching and card == using_card:
                             using_card.using = False
                             using_card = None
+                            cards.clear()
                             break
-        
+                    if using_card != None and using_card.ability(cards, player.hand, room.items):
+                        using_card.using = False
+                        using_card = None
+                        room.change(player.Online)
+
         # hand_card = init_card(hand, screen.info())
         # item_card = init_card(room.items, screen.info())
         
@@ -168,7 +167,7 @@ def main() -> int:
         except:
             log.success("Card list empty")
         
-        player.hand = init_card(["Take","Swap", "Swap", "Swap", "Swap", "Swap"], screen.info())
+        player.hand = init_card(["Take", "Swap", "Swap", "Swap", "Swap", "Swap"], screen.info())
         
         
         log.success("Selecting rooms...")
