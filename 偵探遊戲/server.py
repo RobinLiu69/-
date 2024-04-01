@@ -105,6 +105,8 @@ class Server:
                 client.close()
             self.server_socket.close()
 
+
+
 if __name__ == "__main__":
     server = Server(cards=["Take", "Take"], datas={"kitchen": Datas("kitchen", ["Kinfe", "Kinfe", "Kinfe", "Kinfe", "Kinfe"], ["robin"])})
     server.server_socket.close()

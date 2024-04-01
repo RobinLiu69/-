@@ -63,7 +63,7 @@ def room_selection(screen: Screen, rooms: list[r.Room], room_map: r.Map, hand: l
                 print("clicked")
                 if nearst != None:
                     running = False
-        
+                    
         keys = pygame.key.get_pressed()
         
         if keys[pygame.K_ESCAPE]:
@@ -121,7 +121,7 @@ def enter_room(player: Player, screen: Screen, room: r.Room) -> None:
         keys = pygame.key.get_pressed()
         
         
-        if keys[pygame.K_ESCAPE]:
+        if keys[pygame.K_BACKSPACE]:
             running = False
         
         screen.fill()
@@ -147,10 +147,10 @@ def main() -> int:
     
     # roomlist.append(Room("kitchen"), Room("bedroom"), Room("yard"),Room("study"), Room("liviingroom"))
     rooms.append(r.Room("kitchen", screen.info(), screen.width*2/5, screen.height/16*11.5))
-    rooms.append(r.Room("kitchen", screen.info(), screen.width*11.75/16, screen.height/2))#yard
-    rooms.append(r.Room("kitchen", screen.info(), screen.width*2/5+20, screen.height/2-40))#livingroom
-    rooms.append(r.Room("kitchen", screen.info(), screen.width/4, screen.height*2/5))#bookroom
-    rooms.append(r.Room("kitchen", screen.info(), screen.width*4/7, screen.height/4+20))#bedroom
+    rooms.append(r.Room("kitchen", screen.info(), screen.width*11.75/16, screen.height/2)) # yard
+    rooms.append(r.Room("kitchen", screen.info(), screen.width*2/5+20, screen.height/2-40)) # livingroom
+    rooms.append(r.Room("kitchen", screen.info(), screen.width/4, screen.height*2/5)) # study
+    rooms.append(r.Room("kitchen", screen.info(), screen.width*4/7, screen.height/4+20)) # bedroom
     
     room_map = r.Map(screen.info(), (screen.width, screen.height), rooms)
     
@@ -174,6 +174,8 @@ def main() -> int:
         log.success("Selecting rooms...")
         the_room = room_selection(screen, rooms, room_map, player)
         
+        for room in rooms:
+            room.hightlight = False
         
 
         log.success("Entering the room...")
