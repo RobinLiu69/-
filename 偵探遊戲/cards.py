@@ -221,14 +221,21 @@ class Rag(Card):
     def ability(self, selected_cards: list[Card], hand: list[Card], items: list[Card]) -> int:
         ...
 
-class Kinfe(Card):
+class Knife(Card):
     def __init__(self, size: int, x: int=1, y: int=1) -> None:
-        super().__init__(size, "Kinfe", x, y)#菜刀
+        super().__init__(size, "Knife", x, y)#菜刀
 
     def ability(self, selected_cards: list[Card], hand: list[Card], items: list[Card]) -> int:
         ...
 
 class Frozen_Pork(Card):
+    def __init__(self, size: int, x: int=1, y: int=1) -> None:
+        super().__init__(size, "Frozen_Pork", x, y)#冷凍豬肉
+
+    def ability(self, selected_cards: list[Card], hand: list[Card], items: list[Card]) -> int:
+        ...
+        
+class Pork(Card):
     def __init__(self, size: int, x: int=1, y: int=1) -> None:
         super().__init__(size, "Pork", x, y)#冷凍豬肉
 

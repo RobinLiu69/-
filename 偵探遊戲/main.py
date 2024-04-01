@@ -108,11 +108,14 @@ def enter_room(player: Player, screen: Screen, room: r.Room) -> None:
                         elif card.touching and card == using_card:
                             using_card.using = False
                             using_card = None
+                            for card in cards: card.using = False
                             cards.clear()
                             break
                     if using_card != None and using_card.ability(cards, player.hand, room.items):
                         using_card.using = False
                         using_card = None
+                        for card in cards: card.using = False
+                        cards.clear()
                         room.change(player.Online)
 
         # hand_card = init_card(hand, screen.info())
@@ -168,7 +171,7 @@ def main() -> int:
         except:
             log.success("Card list empty")
         
-        player.hand = init_card(["Take", "Swap", "Swap", "Swap", "Swap", "Swap"], screen.info())
+        player.hand = init_card(["Take", "Take", "Put_down", "Put_down", "Swap", "Swap"], screen.info())
         
         
         log.success("Selecting rooms...")
