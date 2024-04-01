@@ -102,7 +102,7 @@ def enter_room(player: Player, screen: Screen, room: r.Room) -> None:
                 else:
                     for card in player.hand+room.items:
                         if card.touching and card != using_card:
-                            if using_card.ability(card, player.hand, room.items):
+                            if using_card.ability(card, player.hand, room.items, mouse_x, mouse_y):
                                 using_card.using = False
                                 using_card = None
                                 room.change(player.Online)
@@ -168,7 +168,7 @@ def main() -> int:
         except:
             log.success("Card list empty")
         
-        player.hand = init_card(["Take", "Take", "Put_down", "Put_down"], screen.info())
+        player.hand = init_card(["Take","Swap", "Swap", "Swap", "Swap", "Swap"], screen.info())
         
         
         log.success("Selecting rooms...")
@@ -192,3 +192,4 @@ if __name__ == "__main__":
     main()
     log.success("Quit")
     pygame.quit()
+    

@@ -1,7 +1,7 @@
 from os import path
 import pygame
 
-functional_cards = ("放置", "謀殺", "布置現場", "交易", "足跡", "拿取", "檢視")
+functional_cards = ("放置", "謀殺", "佈置現場", "交易", "足跡", "拿取", "檢視")
 
 def draw_card(cards: list[str], hand: list["Card"], screen_info: tuple[int, int]) -> tuple[list[str], list["Card"]]:
     hand += init_card(cards.pop(), screen_info)
@@ -43,8 +43,7 @@ class Card:
             self.x = screen_info[0]//2 - self.width*1.2*2.5 + self.width*1.2*((index-1)%5)
             if self.touching or self.using: self.y = screen_info[1]/10 + self.height*1.1*(yp) - self.height*0.3
             else: self.y = screen_info[1]/10 + self.height*1.1*(yp)
-            self.draw(surface)
-        
+            self.draw(surface)     
         
     def touch(self, mouse_x: int, mouse_y: int) -> int:
         if not self.touching and self.x < mouse_x < self.x + self.width and self.y < mouse_y < self.y + self.height*1: return 1
@@ -72,7 +71,7 @@ class Take(Card):
     def __init__(self, size: int, x: int=1, y: int=1) -> None:
         super().__init__(size, "拿取", x, y)
 
-    def ability(self, selected_Card: Card, hand: list[Card], items: list[Card]) -> int:
+    def ability(self, selected_Card: Card, hand: list[Card], items: list[Card], mouse_x: int = None, mouse_y: int = None) -> int:
         if selected_Card in items and selected_Card.name not in functional_cards:
             items.remove(selected_Card)
             hand.append(selected_Card)
@@ -86,16 +85,35 @@ class Take(Card):
         return 1
         
        
-        
-    
 class Put_down(Card):
     def __init__(self, size: float, x: int=1, y: int=1) -> None:
         super().__init__(size, "放置", x, y)
 
-    def ability(self, selected_Card: Card, hand: list[Card], items: list[Card]) -> int:
+    def ability(self, selected_Card: Card, hand: list[Card], items: list[Card],  mouse_x: int = None, mouse_y: int = None) -> int:
         if selected_Card in hand and selected_Card.name not in functional_cards:
             hand.remove(selected_Card)
             items.append(selected_Card)
+        else:
+            return 0
+        if self in hand:
+            hand.remove(self)
+            items.append(self)
+        else:
+            return 0
+        return 1
+    
+class Swap(Card):
+    def __init__(self, size: int, x: int=1, y: int=1) -> None:
+        super().__init__(size, "佈置現場", x, y)
+
+    def ability(self, selected_Card: Card, hand: list[Card], items: list[Card], mouse_x: int = None, mouse_y: int = None) -> int:
+        if selected_Card in items and selected_Card.name not in functional_cards:
+            sel_1 = items.index(selected_Card)
+            for card in items:
+                if card.touch(mouse_x, mouse_y) == 1 and card != selected_Card and card.name not in functional_cards:
+                    print("hi")
+                    sel_2 = items.index(card)
+            items[sel_1], items[sel_2] = items[sel_2], items[sel_1]
         else:
             return 0
         if self in hand:
@@ -108,225 +126,219 @@ class Put_down(Card):
 class Kill(Card):  
     def __init__(self, size: float, x: int=1, y: int=1) -> None:
         super().__init__(size, "謀殺", x, y)
-    def abiility(self):
-        pass
 
-class Swap(Card):
-    def __init__(self, size: int, x: int=1, y: int=1) -> None:
-        super().__init__(size, "布置現場", x, y)
-
-    def ability(self):
+    def ability(self, selected_Card: Card, hand: list[Card], items: list[Card], mouse_x: int = None, mouse_y: int = None) -> int:
         ...
+
 
 class Trade(Card):
     def __init__(self, size: int, x: int=1, y: int=1) -> None:
         super().__init__(size, "交易", x, y)
 
-    def ability(self):
+    def ability(self, selected_Card: Card, hand: list[Card], items: list[Card], mouse_x: int = None, mouse_y: int = None) -> int:
         ...
 
 class View(Card):
     def __init__(self, size: int, x: int=1, y: int=1) -> None:
         super().__init__(size, "檢視", x, y)
 
-    def ability(self):
+    def ability(self, selected_Card: Card, hand: list[Card], items: list[Card], mouse_x: int = None, mouse_y: int = None) -> int:
         ...
 
 class Footprints(Card):
     def __init__(self, size: int, x: int=1, y: int=1) -> None:
         super().__init__(size, "足跡", x, y)
 
-    def ability(self):
+    def ability(self, selected_Card: Card, hand: list[Card], items: list[Card], mouse_x: int = None, mouse_y: int = None) -> int:
         ...
 
 class Chandelier(Card):
     def __init__(self, size: int, x: int=1, y: int=1) -> None:
         super().__init__(size, "吊燈", x, y)
 
-    def ability(self):
+    def ability(self, selected_Card: Card, hand: list[Card], items: list[Card], mouse_x: int = None, mouse_y: int = None) -> int:
         ...
 
 class Pot(Card):
     def __init__(self, size: int, x: int=1, y: int=1) -> None:
         super().__init__(size, "空的盆栽", x, y)
 
-    def ability(self):
+    def ability(self, selected_Card: Card, hand: list[Card], items: list[Card], mouse_x: int = None, mouse_y: int = None) -> int:
         ...
 
 class Footprints(Card):
     def __init__(self, size: int, x: int=1, y: int=1) -> None:
         super().__init__(size, "交易", x, y)
 
-    def ability(self):
+    def ability(self, selected_Card: Card, hand: list[Card], items: list[Card], mouse_x: int = None, mouse_y: int = None) -> int:
         ...
 
 class Remote_control(Card):
     def __init__(self, size: int, x: int=1, y: int=1) -> None:
         super().__init__(size, "遙控器", x, y)
 
-    def ability(self):
+    def ability(self, selected_Card: Card, hand: list[Card], items: list[Card], mouse_x: int = None, mouse_y: int = None) -> int:
         ...
 
 class Pistol(Card):
     def __init__(self, size: int, x: int=1, y: int=1) -> None:
         super().__init__(size, "手槍", x, y)
 
-    def ability(self):
+    def ability(self, selected_Card: Card, hand: list[Card], items: list[Card], mouse_x: int = None, mouse_y: int = None) -> int:
         ...
 
 class Bullet(Card):
     def __init__(self, size: int, x: int=1, y: int=1) -> None:
         super().__init__(size, "彈殼", x, y)
 
-    def ability(self):
+    def ability(self, selected_Card: Card, hand: list[Card], items: list[Card], mouse_x: int = None, mouse_y: int = None) -> int:
         ...
 
 class Pillow(Card):
     def __init__(self, size: int, x: int=1, y: int=1) -> None:
         super().__init__(size, "枕頭", x, y)
 
-    def ability(self):
+    def ability(self, selected_Card: Card, hand: list[Card], items: list[Card], mouse_x: int = None, mouse_y: int = None) -> int:
         ...
 
 class Safe(Card):
     def __init__(self, size: int, x: int=1, y: int=1) -> None:
         super().__init__(size, "保險箱", x, y)
 
-    def ability(self):
+    def ability(self, selected_Card: Card, hand: list[Card], items: list[Card], mouse_x: int = None, mouse_y: int = None) -> int:
         ...
 
 class Rag(Card):
     def __init__(self, size: int, x: int=1, y: int=1) -> None:
         super().__init__(size, "抹布", x, y)
 
-    def ability(self):
+    def ability(self, selected_Card: Card, hand: list[Card], items: list[Card], mouse_x: int = None, mouse_y: int = None) -> int:
         ...
 
 class Kinfe(Card):
     def __init__(self, size: int, x: int=1, y: int=1) -> None:
         super().__init__(size, "菜刀", x, y)
 
-    def ability(self):
+    def ability(self, selected_Card: Card, hand: list[Card], items: list[Card], mouse_x: int = None, mouse_y: int = None) -> int:
         ...
 
 class Pork(Card):
     def __init__(self, size: int, x: int=1, y: int=1) -> None:
         super().__init__(size, "冷凍豬肉", x, y)
 
-    def ability(self):
+    def ability(self, selected_Card: Card, hand: list[Card], items: list[Card], mouse_x: int = None, mouse_y: int = None) -> int:
         ...
 
 class Flowers(Card):
     def __init__(self, size: int, x: int=1, y: int=1) -> None:
         super().__init__(size, "花叢", x, y)
 
-    def ability(self):
+    def ability(self, selected_Card: Card, hand: list[Card], items: list[Card], mouse_x: int = None, mouse_y: int = None) -> int:
         ...
 
 class Water(Card):
     def __init__(self, size: int, x: int=1, y: int=1) -> None:
         super().__init__(size, "水", x, y)
 
-    def ability(self):
+    def ability(self, selected_Card: Card, hand: list[Card], items: list[Card], mouse_x: int = None, mouse_y: int = None) -> int:
         ...
 
 class Garden_shears(Card):
     def __init__(self, size: int, x: int=1, y: int=1) -> None:
         super().__init__(size, "園藝剪", x, y)
 
-    def ability(self):
+    def ability(self, selected_Card: Card, hand: list[Card], items: list[Card], mouse_x: int = None, mouse_y: int = None) -> int:
         ...
 
 class Monitor(Card):
     def __init__(self, size: int, x: int=1, y: int=1) -> None:
         super().__init__(size, "監視器", x, y)
 
-    def ability(self):
+    def ability(self, selected_Card: Card, hand: list[Card], items: list[Card], mouse_x: int = None, mouse_y: int = None) -> int:
         ...
 
 class Key(Card):
     def __init__(self, size: int, x: int=1, y: int=1) -> None:
         super().__init__(size, "鑰匙", x, y)
 
-    def ability(self):
+    def ability(self, selected_Card: Card, hand: list[Card], items: list[Card], mouse_x: int = None, mouse_y: int = None) -> int:
         ...
 
 class Pen(Card):
     def __init__(self, size: int, x: int=1, y: int=1) -> None:
         super().__init__(size, "鋼筆", x, y)
 
-    def ability(self):
+    def ability(self, selected_Card: Card, hand: list[Card], items: list[Card], mouse_x: int = None, mouse_y: int = None) -> int:
         ...
 
 class Unused_mask(Card):
     def __init__(self, size: int, x: int=1, y: int=1) -> None:
         super().__init__(size, "未使用的易容面具", x, y)
 
-    def ability(self):
+    def ability(self, selected_Card: Card, hand: list[Card], items: list[Card], mouse_x: int = None, mouse_y: int = None) -> int:
         ...
 
 class Tracker(Card):
     def __init__(self, size: int, x: int=1, y: int=1) -> None:
         super().__init__(size, "追蹤器", x, y)
 
-    def ability(self):
+    def ability(self, selected_Card: Card, hand: list[Card], items: list[Card], mouse_x: int = None, mouse_y: int = None) -> int:
         ...
 
 class Whisky(Card):
     def __init__(self, size: int, x: int=1, y: int=1) -> None:
         super().__init__(size, "威士忌", x, y)
 
-    def ability(self):
+    def ability(self, selected_Card: Card, hand: list[Card], items: list[Card], mouse_x: int = None, mouse_y: int = None) -> int:
         ...
 
 class Flashlight(Card):
     def __init__(self, size: int, x: int=1, y: int=1) -> None:
         super().__init__(size, "手電筒", x, y)
 
-    def ability(self):
+    def ability(self, selected_Card: Card, hand: list[Card], items: list[Card], mouse_x: int = None, mouse_y: int = None) -> int:
         ...
 
 class Rope(Card):
     def __init__(self, size: int, x: int=1, y: int=1) -> None:
         super().__init__(size, "繩子", x, y)
 
-    def ability(self):
+    def ability(self, selected_Card: Card, hand: list[Card], items: list[Card], mouse_x: int = None, mouse_y: int = None) -> int:
         ...
 
 class Mud(Card):
     def __init__(self, size: int, x: int=1, y: int=1) -> None:
         super().__init__(size, "泥巴", x, y)
 
-    def ability(self):
+    def ability(self, selected_Card: Card, hand: list[Card], items: list[Card], mouse_x: int = None, mouse_y: int = None) -> int:
         ...
 
 class Bugging_receiver(Card):
     def __init__(self, size: int, x: int=1, y: int=1) -> None:
         super().__init__(size, "竊聽筒", x, y)
 
-    def ability(self):
+    def ability(self, selected_Card: Card, hand: list[Card], items: list[Card], mouse_x: int = None, mouse_y: int = None) -> int:
         ...
 
 class Cross(Card):
     def __init__(self, size: int, x: int=1, y: int=1) -> None:
         super().__init__(size, "十字架", x, y)
 
-    def ability(self):
+    def ability(self, selected_Card: Card, hand: list[Card], items: list[Card], mouse_x: int = None, mouse_y: int = None) -> int:
         ...
 
 class Broom(Card):
     def __init__(self, size: int, x: int=1, y: int=1) -> None:
         super().__init__(size, "掃把", x, y)
 
-    def ability(self):
+    def ability(self, selected_Card: Card, hand: list[Card], items: list[Card], mouse_x: int = None, mouse_y: int = None) -> int:
         ...
 
 class Coffee_pot(Card):
     def __init__(self, size: int, x: int=1, y: int=1) -> None:
         super().__init__(size, "咖啡壺", x, y)
 
-    def ability(self):
+    def ability(self, selected_Card: Card, hand: list[Card], items: list[Card], mouse_x: int = None, mouse_y: int = None) -> int:
         ...
-
 
 
