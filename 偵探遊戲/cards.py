@@ -217,7 +217,7 @@ class Kinfe(Card):
     def ability(self, selected_Card: Card, hand: list[Card], items: list[Card], mouse_x: int = None, mouse_y: int = None) -> int:
         ...
 
-class Pork(Card):
+class Frozen_Pork(Card):
     def __init__(self, size: int, x: int=1, y: int=1) -> None:
         super().__init__(size, "Pork", x, y)#冷凍豬肉
 
@@ -238,9 +238,9 @@ class Water(Card):
     def ability(self, selected_Card: Card, hand: list[Card], items: list[Card], mouse_x: int = None, mouse_y: int = None) -> int:
         ...
 
-class Garden_shears(Card):
+class Garden_shear(Card):
     def __init__(self, size: int, x: int=1, y: int=1) -> None:
-        super().__init__(size, "Garden_shears", x, y)#園藝剪
+        super().__init__(size, "Garden_shear", x, y)#園藝剪
 
     def ability(self, selected_Card: Card, hand: list[Card], items: list[Card], mouse_x: int = None, mouse_y: int = None) -> int:
         ...
@@ -336,4 +336,30 @@ class Coffee_pot(Card):
     def ability(self, selected_Card: Card, hand: list[Card], items: list[Card], mouse_x: int = None, mouse_y: int = None) -> int:
         ...
 
+class Bloody_garden_shear(Card):
+    def __init__(self, size: int, x: int=1, y: int=1) -> None:
+        super().__init__(size, "Bloody_garden_shear", x, y)#血剪
 
+    def ability(self, selected_Card: Card, hand: list[Card], items: list[Card], mouse_x: int = None, mouse_y: int = None) -> int:
+        ...
+
+class Bloody_knife(Card):
+    def __init__(self, size: int, x: int=1, y: int=1) -> None:
+        super().__init__(size, "Bloody_knife", x, y)#血刀
+
+    def ability(self, selected_Card: Card, hand: list[Card], items: list[Card], mouse_x: int = None, mouse_y: int = None) -> int:
+        ...
+
+class Bloody_pen(Card):
+    def __init__(self, size: int, x: int=1, y: int=1) -> None:
+        super().__init__(size, "Bloody_pen", x, y)#血鋼筆
+
+    def ability(self, selected_Card: Card, hand: list[Card], items: list[Card], mouse_x: int = None, mouse_y: int = None) -> int:
+        ...
+
+class Broken_cross(Card):
+    def __init__(self, size: int, x: int=1, y: int=1) -> None:
+        super().__init__(size, "Broken_cross", x, y)#破十字架
+
+    def ability(self, selected_Card: Card, hand: list[Card], items: list[Card], mouse_x: int = None, mouse_y: int = None) -> int:
+        ...
