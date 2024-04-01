@@ -103,6 +103,7 @@ def enter_room(player: Player, screen: Screen, room: r.Room) -> None:
                 else:
                     for card in player.hand+room.items:
                         if card.touching and card != using_card and card not in cards:
+                            card.using = True
                             cards.append(card)
                         elif card.touching and card == using_card:
                             using_card.using = False
