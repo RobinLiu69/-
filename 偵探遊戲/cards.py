@@ -3,12 +3,12 @@ import pygame
 
 functional_cards = ("放置", "謀殺", "布置現場", "交易", "足跡", "拿取", "檢視")
 
-def draw_card(cards: list[tuple[str, int]], hand: list[tuple[str, int]]) -> tuple[list[tuple[str, int]], list[tuple[str, int]]]:
-    hand.append(tuple(cards.pop()))
+def draw_card(cards: list[str], hand: list["Card"], screen_info: tuple[int, int]) -> tuple[list[str], list["Card"]]:
+    hand += init_card(cards.pop(), screen_info)
     return cards, hand
 
 # 做到一半
-def init_card(cards: list[tuple[str, int]], screen_info: tuple[int, int]) -> list["Card"]:
+def init_card(cards: list["Card"], screen_info: tuple[int, int]) -> list["Card"]:
     temp = []
     for card in cards:
         # print(f"{card}({screen_info[0]/10})", type(eval(f"{card}({screen_info[0]/10})")))

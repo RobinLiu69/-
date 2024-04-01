@@ -32,19 +32,17 @@ class Room:
     def changed(self, data: client.Datas) -> int:
         temp: list[str] = [card.__class__.__name__ for card in self.items]
         if temp != data.items:
-            print(temp, data.items)
             return 1
         elif self.players != data.players: return 1
         else: return 0
     
     def change(self, online: client.Client):
-        online.send_data(self.name, self.items, self.players)
+        online.send_data(self.name, [card.__class__.__name__ for card in self.items], self.players)
     
     def data_update(self, data: client.Datas, screen_info: tuple[int, int]) -> int:
         try:
             self.items: list[Card] = init_card(data.items, screen_info)
             self.players: list[str] = data.players
-            print("Updatd")
             return 0
         except Exception as e:
             print(e)

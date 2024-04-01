@@ -156,15 +156,14 @@ def main() -> int:
     
     for room in rooms:
         room.data_update(player.Online.datas[room.name], screen.info())
-        print(room.info())
-        
+    
     running = True
     
     
     while running:
         try:
             for _ in range(5):
-                cards, player.hand = init_card(draw_card(player.Online.cards, player.hand), screen.info())
+                cards, player.hand = draw_card(player.Online.cards, player.hand)
                 player.Online.send_data(cards=cards)
         except:
             log.success("Card list empty")

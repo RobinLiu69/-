@@ -72,19 +72,14 @@ class Server:
             except Exception as e:
                 print(e)
                 self.clients.remove(client)
+                self.broadcast()
                 
-    def send_data(self, client_socket: socket.socket, data:Datas = None, cards: list[str]=None) -> bool:
-        try:
-            if data != None:
-                data = {"room_name" : data.name, "items" : data.items, "players" : data.players}
-                client_socket.send(f"J->:{data}:<-J".encode('utf-8'))
-            if cards != None:
-                client_socket.send(f"C->:{cards}:<-C".encode('utf-8'))
-
-            return True
-        except Exception as e:
-            print(e, data)
-            return False
+    def send_data(self, client_socket: socket.socket, data:Datas = None, cards: list[str]=None) -> None:
+        if data != None:
+            data = {"room_name" : data.name, "items" : data.items, "players" : data.players}
+            client_socket.send(f"J->:{data}:<-J".encode('utf-8'))
+        if cards != None:
+            client_socket.send(f"C->:{cards}:<-C".encode('utf-8'))
         
     def find_client(self) -> None:
         try:
