@@ -1,5 +1,5 @@
 import socket, json, re
-import threading, time
+import threading, time, cards
 from pwn import log
 
 class Datas:

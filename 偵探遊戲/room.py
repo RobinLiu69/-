@@ -1,12 +1,13 @@
 import pygame, client
 from os import path
+from cards import *
 
 class Room:
     def __init__(self, room_name: str, size: tuple[int, int], x: int, y: int) -> None:
         self.name = room_name
         self.x = x
         self.y = y
-        self.items = []
+        self.items: list[Card] = []
         self.players = []
         self.width = size[0]
         self.height = size[1]
@@ -23,17 +24,27 @@ class Room:
         else:
             pygame.draw.circle(surface, (150, 150, 10), (self.x, self.y), height/50)
     
-    def update(self, surface: pygame.surface.Surface, data: client.Datas) -> int:
+    def update(self, surface: pygame.surface.Surface, data: client.Datas, screen_info: tuple[int, int]) -> None:
         self.draw(surface)
-        self.data_update(data)
-        
+        if self.changed(data):
+            self.data_update(data, screen_info)
+    
+    def changed(self, data: client.Datas) -> int:
+        temp: list[str] = [card.__class__.__name__ for card in self.items]
+        if temp != data.items:
+            print(temp, data.items)
+            return 1
+        elif self.players != data.players: return 1
+        else: return 0
+    
     def change(self, online: client.Client):
         online.send_data(self.name, self.items, self.players)
     
-    def data_update(self, data: client.Datas) -> int:
+    def data_update(self, data: client.Datas, screen_info: tuple[int, int]) -> int:
         try:
-            self.items: list[tuple[str, int]] = data.items
+            self.items: list[Card] = init_card(data.items, screen_info)
             self.players: list[str] = data.players
+            print("Updatd")
             return 0
         except Exception as e:
             print(e)

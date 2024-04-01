@@ -1,9 +1,15 @@
 import pygame
 import client, server
-import cards as c
+from cards import *
 import room as r
 from os import path
 from pwn import log
+
+class Player:
+    def __init__(self, name, server_address: str, hand: list[Card]=[]):
+        self.name = name
+        self.hand = hand
+        self.Online = client.Client(server_address)
 
 
 class Screen:
@@ -39,11 +45,11 @@ class Screen:
 
 def init():
     pygame.init()
-    Online = client.Client(input())
+    player = Player("robin", input("Server address: "))
     screen = Screen()
     # Online = client.Client("13.76.138.194")
     rooms: list[r.Room] = []
-    return Online, rooms, screen
+    return player, rooms, screen
 
 
 def room_selection(screen: Screen, rooms: list[r.Room], room_map: r.Map, hand: list[tuple[str, int]]) -> r.Room:
@@ -77,12 +83,9 @@ def room_selection(screen: Screen, rooms: list[r.Room], room_map: r.Map, hand: l
         screen.flip()
     return nearst
     
-def enter_room(Online: client.Client, screen: Screen, room: r.Room, hand: list[tuple[str, int]]) -> None:
+def enter_room(player: Player, screen: Screen, room: r.Room) -> None:
     
-    hand_card = c.init_card(hand, screen.info())
-    item_card = c.init_card(room.items, screen.info())
-    
-    using_card: c.Card = None
+    using_card: Card = None
     
     running = True
     while running:
@@ -91,20 +94,18 @@ def enter_room(Online: client.Client, screen: Screen, room: r.Room, hand: list[t
                 running = False
             if event.type == pygame.MOUSEBUTTONDOWN:
                 if using_card == None:
-                    for card in hand_card:
+                    for card in player.hand:
                         if card.touching:
                             using_card = card
                             using_card.using = True
                             break
                 else:
-                    for card in hand_card+item_card:
+                    for card in player.hand+room.items:
                         if card.touching and card != using_card:
-                            if using_card.ability(card, hand, room.items):
+                            if using_card.ability(card, player.hand, room.items):
                                 using_card.using = False
                                 using_card = None
-                                hand_card = c.init_card(hand, screen.info())
-                                item_card = c.init_card(room.items, screen.info())
-                                room.change(Online)
+                                room.change(player.Online)
                             else:
                                 using_card.using = False
                                 using_card = None
@@ -114,8 +115,8 @@ def enter_room(Online: client.Client, screen: Screen, room: r.Room, hand: list[t
                             using_card = None
                             break
         
-        # hand_card = c.init_card(hand, screen.info())
-        # item_card = c.init_card(room.items, screen.info())
+        # hand_card = init_card(hand, screen.info())
+        # item_card = init_card(room.items, screen.info())
         
         keys = pygame.key.get_pressed()
         
@@ -125,32 +126,24 @@ def enter_room(Online: client.Client, screen: Screen, room: r.Room, hand: list[t
         
         screen.fill()
         
-        for card in item_card:
-            for value in room.items:
-                if card.identity == value[1]:
-                    break
-            else:
-                print("update")
-                item_card = c.init_card(room.items, screen.info())
-        
         mouse_x, mouse_y = pygame.mouse.get_pos()
         
-        room.update(screen.screen, Online.datas[room.name])
+        room.update(screen.screen, player.Online.datas[room.name], screen.info())
         
         
-        for index, card in enumerate(hand_card):
-            card.update(screen.screen, screen.info(), "hand", index+1, len(hand_card), mouse_x, mouse_y)
+        for index, card in enumerate(player.hand):
+            card.update(screen.screen, screen.info(), "hand", index+1, len(player.hand), mouse_x, mouse_y)
             
 
-        for index, card in enumerate(item_card):
-            card.update(screen.screen, screen.info(), "item", index+1, len(item_card), mouse_x, mouse_y)
+        for index, card in enumerate(room.items):
+            card.update(screen.screen, screen.info(), "item", index+1, len(room.items), mouse_x, mouse_y)
 
         screen.flip()
     return  None
     
 def main() -> int:
     
-    Online, rooms, screen = init()
+    player, rooms, screen = init()
     
     # roomlist.append(Room("kitchen"), Room("bedroom"), Room("yard"),Room("study"), Room("liviingroom"))
     rooms.append(r.Room("kitchen", screen.info(), screen.width*2/5, screen.height/16*11.5))
@@ -162,33 +155,31 @@ def main() -> int:
     room_map = r.Map(screen.info(), (screen.width, screen.height), rooms)
     
     for room in rooms:
-        room.data_update(Online.datas[room.name])
+        room.data_update(player.Online.datas[room.name], screen.info())
         print(room.info())
         
-    
-    hand: list[tuple[str, int]] = []
     running = True
     
     
     while running:
         try:
             for _ in range(5):
-                cards, hand = c.draw_card(Online.cards, hand)
-                Online.send_data(cards=cards)
+                cards, player.hand = init_card(draw_card(player.Online.cards, player.hand), screen.info())
+                player.Online.send_data(cards=cards)
         except:
             log.success("Card list empty")
         
-        hand: list[tuple[str, int]] = [("Take", 1), ("Take", 2), ("Put_down", 3), ("Put_down", 4)]
+        player.hand = init_card(["Take", "Take", "Put_down", "Put_down"], screen.info())
         
         
         log.success("Selecting rooms...")
-        the_room = room_selection(screen, rooms, room_map, hand)
+        the_room = room_selection(screen, rooms, room_map, player)
         
         
 
         log.success("Entering the room...")
         if the_room != None:
-            enter_room(Online, screen, the_room, hand)
+            enter_room(player, screen, the_room)
         else:
             log.success("No room selected")
             running = False

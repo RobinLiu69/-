@@ -16,7 +16,7 @@ class Datas:
                 self.players = value
 
 class Server:
-    def __init__(self, cards: list[list[str, int]]=[], datas: dict[Datas]={}) -> None:
+    def __init__(self, cards: list[str]=[], datas: dict[Datas]={}) -> None:
         log.success("Server initialized")
         self.server_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         self.server_address = ("0.0.0.0", 40000)
@@ -27,7 +27,7 @@ class Server:
         self.server_socket.listen(8)
         log.success('Waiting clients to connect...')
         self.clients: list[socket.socket] = []
-        self.cards: list[list[str, int]] = cards
+        self.cards: list[str] = cards
         self.datas: dict[Datas, str] = datas
         self.find_client()
 
@@ -111,5 +111,5 @@ class Server:
             self.server_socket.close()
 
 if __name__ == "__main__":
-    server = Server(cards=[["Take", 1], ["Take", 2]], datas={"kitchen": Datas("kitchen", [["Kinfe", 100], ["Kinfe", 101], ["Kinfe", 102], ["Kinfe", 103], ["Kinfe", 104]], ["robin"])})
+    server = Server(cards=["Take", "Take"], datas={"kitchen": Datas("kitchen", ["Kinfe", "Kinfe", "Kinfe", "Kinfe", "Kinfe"], ["robin"])})
     server.server_socket.close()
