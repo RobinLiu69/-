@@ -153,10 +153,10 @@ def main() -> int:
     
     # roomlist.append(Room("kitchen"), Room("bedroom"), Room("yard"),Room("study"), Room("liviingroom"))
     rooms.append(r.Room("kitchen", screen.info(), screen.width*2/5, screen.height/16*11.5))
-    rooms.append(r.Room("yard", screen.info(), screen.width*11.75/16, screen.height/2)) # yard
-    rooms.append(r.Room("livingroom", screen.info(), screen.width*0.42, screen.height*0.45)) # livingroom
-    rooms.append(r.Room("kitchen", screen.info(), screen.width/4, screen.height*2/5)) # study
-    rooms.append(r.Room("kitchen", screen.info(), screen.width*4/7, screen.height*0.26)) # bedroom
+    # rooms.append(r.Room("yard", screen.info(), screen.width*11.75/16, screen.height/2)) # yard
+    # rooms.append(r.Room("livingroom", screen.info(), screen.width*0.42, screen.height*0.45)) # livingroom
+    # rooms.append(r.Room("kitchen", screen.info(), screen.width/4, screen.height*2/5)) # study
+    # rooms.append(r.Room("kitchen", screen.info(), screen.width*4/7, screen.height*0.26)) # bedroom
     
     room_map = r.Map(screen.info(), (screen.width, screen.height), rooms)
     time.sleep(1)
