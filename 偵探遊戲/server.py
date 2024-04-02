@@ -2,16 +2,23 @@ import socket, json, re
 import threading
 from pwn import log
 
-class Datas:
-    def __init__(self, name: str, items: list[str]=[], players: list[str]=[]) -> None:
+class Items:
+    def __init__(self, name: str, history: list[str]=[]) -> None:
         self.name: str = name
-        self.items: list[str] = items
+        self.history: list[str] = history
+        
+class Datas:
+    def __init__(self, name: str, items: list[Items]=[], players: list[str]=[]) -> None:
+        self.name: str = name
+        self.items: list[Items] = items
         self.players: list[str] = players
         
     def update(self, kwargs: dict) -> None:
         for key, value in kwargs.items():
             if key == "items":
-                self.items = value
+                for item in self.items:
+                    if item.name == value["name"]:
+                        item.history = value["history"]
             elif key == "players":
                 self.players = value
 
@@ -19,7 +26,7 @@ class Server:
     def __init__(self, cards: list[str]=[], datas: dict[Datas]={}) -> None:
         log.success("Server initialized")
         self.server_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-        self.server_address = ("192.168.43.55", 40000)
+        self.server_address = ("0.0.0.0", 40000)
         # self.server_address = (socket.gethostbyname(socket.gethostname()), 40000)
         # self.server_address = ("25.61.96.35", 32768)
         log.success(f"Server address(IPv4):{self.server_address}")
@@ -76,7 +83,7 @@ class Server:
                 
     def send_data(self, client_socket: socket.socket, data:Datas = None, cards: list[str]=None) -> None:
         if data != None:
-            data = {"room_name" : data.name, "items" : data.items, "players" : data.players}
+            data = {"room_name" : data.name, "items" : [{"name": item.name, "history": item.history} for item in data.items], "players" : data.players}
             client_socket.send(f"J->:{data}:<-J".encode('utf-8'))
         if cards != None:
             client_socket.send(f"C->:{cards}:<-C".encode('utf-8'))

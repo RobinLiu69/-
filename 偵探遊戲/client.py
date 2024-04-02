@@ -2,16 +2,23 @@ import socket, json, re
 import threading, time, cards
 from pwn import log
 
-class Datas:
-    def __init__(self, name: str, items: list[str]=[], players: list[str]=[]) -> None:
+class Items:
+    def __init__(self, name: str, history: list[str]=[]) -> None:
         self.name: str = name
-        self.items: list[str] = items
+        self.history: list[str] = history
+        
+class Datas:
+    def __init__(self, name: str, items: list[Items]=[], players: list[str]=[]) -> None:
+        self.name: str = name
+        self.items: list[Items] = items
         self.players: list[str] = players
         
     def update(self, kwargs: dict) -> None:
         for key, value in kwargs.items():
             if key == "items":
-                self.items = value
+                for item in self.items:
+                    if item.name == value["name"]:
+                        item.history = value["history"]
             elif key == "players":
                 self.players = value
 

@@ -5,8 +5,11 @@ import room as r
 from os import path
 from pwn import log
 import time
+
+
+
 class Player:
-    def __init__(self, name, server_address: str, hand: list[Card]=[]):
+    def __init__(self, name: str, server_address: str, hand: list[Card]=[]):
         self.name = name
         self.hand = hand
         self.Online = client.Client(server_address)
@@ -155,8 +158,8 @@ def main() -> int:
     rooms.append(r.Room("kitchen", screen.info(), screen.width*2/5, screen.height/16*11.5))
     rooms.append(r.Room("yard", screen.info(), screen.width*11.75/16, screen.height/2)) # yard
     rooms.append(r.Room("livingroom", screen.info(), screen.width*0.42, screen.height*0.45)) # livingroom
-    rooms.append(r.Room("kitchen", screen.info(), screen.width/4, screen.height*2/5)) # study
-    rooms.append(r.Room("kitchen", screen.info(), screen.width*4/7, screen.height*0.26)) # bedroom
+    rooms.append(r.Room("study", screen.info(), screen.width/4, screen.height*2/5)) # study
+    rooms.append(r.Room("bedroom", screen.info(), screen.width*4/7, screen.height*0.26)) # bedroom
     
     room_map = r.Map(screen.info(), (screen.width, screen.height), rooms)
     time.sleep(1)

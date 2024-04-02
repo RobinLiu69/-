@@ -8,7 +8,7 @@ def draw_card(cards: list[str], hand: list["Card"], screen_info: tuple[int, int]
     return cards, hand
 
 # 做到一半
-def init_card(cards: list["Card"], screen_info: tuple[int, int]) -> list["Card"]:
+def init_card(cards: list["str"], screen_info: tuple[int, int]) -> list["Card"]:
     temp = []
     for card in cards:
         # print(f"{card}({screen_info[0]/10})", type(eval(f"{card}({screen_info[0]/10})")))
@@ -23,6 +23,7 @@ class Card:
         self.x = x
         self.y = y
         self.name = name
+        self.history: list[str] = []
         self.touching = False
         self.using = False
         self.imageOriginal = pygame.Surface((self.width,self.height))
