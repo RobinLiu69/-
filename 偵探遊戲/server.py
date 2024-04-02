@@ -70,7 +70,7 @@ class Server:
                 for data in self.datas.items():
                     self.send_data(client, data=data[1])
             except Exception as e:
-                print(e)
+                log.success(f"Remove client from {client}")
                 self.clients.remove(client)
                 self.broadcast()
                 

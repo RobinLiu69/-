@@ -1,7 +1,7 @@
 from os import path
 import pygame
 
-functional_cards = ("放置", "謀殺", "佈置現場", "交易", "足跡", "拿取", "檢視")
+functional_cards = ("Put_down", "Kill", "Swap", "Trade", "Footprints", "Take", "View")
 
 def draw_card(cards: list[str], hand: list["Card"], screen_info: tuple[int, int]) -> tuple[list[str], list["Card"]]:
     hand += init_card(cards.pop(), screen_info)
@@ -72,18 +72,19 @@ class Take(Card):
         super().__init__(size, "Take", x, y)#拿取
 
     def ability(self, selected_cards: list[Card], hand: list[Card], items: list[Card]) -> int:
-        if len(selected_cards) > 1: return 0
+        if len(selected_cards) > 1: return -1
+        if len(selected_cards) < 1: return 0
         selected_card = selected_cards[0]
         if selected_card in items and selected_card.name not in functional_cards:
             items.remove(selected_card)
             hand.append(selected_card)
         else:
-            return 0
+            return -1
         if self in hand:
             hand.remove(self)
             items.append(self)
         else:
-            return 0
+            return -1
         return 1
         
        
@@ -92,18 +93,19 @@ class Put_down(Card):
         super().__init__(size, "Put_down", x, y)#放置
 
     def ability(self, selected_cards: list[Card], hand: list[Card], items: list[Card]) -> int:
-        if len(selected_cards) > 1: return 0
+        if len(selected_cards) > 1: return -1
+        if len(selected_cards) < 1: return 0
         selected_card = selected_cards[0]
         if selected_card in hand and selected_card.name not in functional_cards:
             hand.remove(selected_card)
             items.append(selected_card)
         else:
-            return 0
+            return -1
         if self in hand:
             hand.remove(self)
             items.append(self)
         else:
-            return 0
+            return -1
         return 1
     
 class Swap(Card):
@@ -111,22 +113,23 @@ class Swap(Card):
         super().__init__(size, "Swap", x, y)#交換
 
     def ability(self, selected_cards: list[Card], hand: list[Card], items: list[Card]) -> int:
-        if len(selected_cards) > 2 or len(selected_cards) < 2: return 0
+        if len(selected_cards) > 2: return -1
+        if len(selected_cards) < 2: return 0
         card_1, card_2 = selected_cards[0], selected_cards[1]
         if card_1 in items:
             index_1 = items.index(card_1)
         else:
-            return 0
+            return -1
         if card_2 in items:
             index_2 = items.index(card_2)
         else:
-            return 0
+            return -1
         items[index_1], items[index_2] = items[index_2], items[index_1]
         if self in hand:
             hand.remove(self)
             items.append(self)
         else:
-            return 0
+            return -1
         return 1
 
 class Kill(Card):  
