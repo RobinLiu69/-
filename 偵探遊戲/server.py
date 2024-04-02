@@ -19,7 +19,7 @@ class Server:
     def __init__(self, cards: list[str]=[], datas: dict[Datas]={}) -> None:
         log.success("Server initialized")
         self.server_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-        self.server_address = ("0.0.0.0", 40000)
+        self.server_address = ("192.168.43.55", 40000)
         # self.server_address = (socket.gethostbyname(socket.gethostname()), 40000)
         # self.server_address = ("25.61.96.35", 32768)
         log.success(f"Server address(IPv4):{self.server_address}")
@@ -108,5 +108,12 @@ class Server:
 
 
 if __name__ == "__main__":
-    server = Server(cards=["Take", "Take"], datas={"kitchen": Datas("kitchen", ["Pork", "Mud", "Knife", "Knife", "Pork"], ["robin"])})
+    server = Server(cards=["Take", "Take"], datas={"kitchen": Datas("kitchen", ["Pork", "Mud", "Knife", "Knife", "Pork"], ["robin"]), 
+                                                   "yard": Datas("yard", ["Pork", "Pork", "Knife", "Knife", "Pork"], ["robin"]), 
+                                                   "bedroom": Datas("bedroom", ["Pork", "Pork", "Pork", "Knife", "Pork"], ["robin"]), 
+                                                   "study": Datas("study", ["Pork", "Pork", "Pork", "Pork", "Knife"], ["robin"]), 
+                                                   "livingroom": Datas("livingroom", ["Pork", "Pork", "Pork", "Pork", "Pork"], ["robin"])})
+    
+
+  
     server.server_socket.close()
