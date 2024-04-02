@@ -105,13 +105,16 @@ def enter_room(player: Player, screen: Screen, room: r.Room) -> None:
                         if card.touching and card != using_card and card not in cards:
                             card.using = True
                             cards.append(card)
+                        elif card.touching and card != using_card and card in cards:
+                            card.using = False
+                            cards.remove(card)
                         elif card.touching and card == using_card:
                             using_card.using = False
                             using_card = None
                             for card in cards: card.using = False
                             cards.clear()
                             break
-                    if using_card != None and using_card.ability(cards, player.hand, room.items):
+                    if using_card != None and abs(using_card.ability(cards, player.hand, room.items)):
                         using_card.using = False
                         using_card = None
                         for card in cards: card.using = False
