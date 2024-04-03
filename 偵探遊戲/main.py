@@ -13,7 +13,7 @@ class Player:
         self.name = name
         self.hand = hand
         self.Online = client.Client(server_address)
-
+    
 
 class Screen:
     def __init__(self, width: int=None, height: int=None) -> None:

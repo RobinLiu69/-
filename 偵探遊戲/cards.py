@@ -64,7 +64,9 @@ class Card:
 
     def draw(self, surface: pygame.surface.Surface):
         surface.blit(self.image, (self.x,self.y))
-        
+
+    def cover(self, surface: pygame.surface.Surface):
+        ...
     def ability() -> None: ...
 
 
@@ -176,12 +178,6 @@ class Pot(Card):
     def ability(self, selected_cards: list[Card], hand: list[Card], items: list[Card]) -> int:
         ...
 
-class Footprints(Card):
-    def __init__(self, size: int, x: int=1, y: int=1) -> None:
-        super().__init__(size, "交易", x, y)
-
-    def ability(self, selected_cards: list[Card], hand: list[Card], items: list[Card]) -> int:
-        ...
 
 class Remote_control(Card):
     def __init__(self, size: int, x: int=1, y: int=1) -> None:
@@ -195,7 +191,21 @@ class Pistol(Card):
         super().__init__(size, "Pistol", x, y)#手槍
 
     def ability(self, selected_cards: list[Card], hand: list[Card], items: list[Card]) -> int:
-        ...
+        if len(selected_cards) > 1: return -1
+        if len(selected_cards) < 1: return 0
+        selected_card = selected_cards[0]
+        if selected_card in items and selected_card.name == "Chandelier":
+            index = items.index(selected_card)
+            items.remove(selected_card)
+            items.insert(index, Broken_chandelier(selected_card))
+        else:
+            return -1
+        if self in hand:
+            hand.remove(self)
+            items.append(self)
+        else:
+            return -1
+        return 1
 
 class Bullet(Card):
     def __init__(self, size: int, x: int=1, y: int=1) -> None:
@@ -384,4 +394,11 @@ class Broken_cross(Card):
         super().__init__(size, "Broken_cross", x, y)#破十字架
 
     def ability(self, selected_Card: Card, hand: list[Card], items: list[Card], mouse_x: int = None, mouse_y: int = None) -> int:
+        ...
+
+class  Broken_chandelier(Card):
+    def __init__(self, size: int, x: int=1, y: int=1) -> None:
+        super().__init__(size, "Broken_chandelier", x, y)#"破吊燈"
+
+    def ability(self, selected_cards: list[Card], hand: list[Card], items: list[Card]) -> int:
         ...
