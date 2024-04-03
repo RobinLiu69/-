@@ -5,8 +5,11 @@ import room as r
 from os import path
 from pwn import log
 import time
+
+
+
 class Player:
-    def __init__(self, name, server_address: str, hand: list[Card]=[]):
+    def __init__(self, name: str, server_address: str, hand: list[Card]=[]):
         self.name = name
         self.hand = hand
         self.Online = client.Client(server_address)
