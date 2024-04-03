@@ -166,6 +166,7 @@ def main() -> int:
         room.data_update(player.Online.datas[room.name], screen.info())
     running = True
     
+    time.sleep(1)
     
     while running:
         try:
