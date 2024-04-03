@@ -8,17 +8,15 @@ class Items:
         self.history: list[str] = history
         
 class Datas:
-    def __init__(self, name: str, items: list[Items]=[], players: list[str]=[]) -> None:
+    def __init__(self, name: str, items: list[dict]=[], players: list[str]=[]) -> None:
         self.name: str = name
-        self.items: list[Items] = list(map(Items, items))
+        self.items: list[Items] = list(Items(item["name"], item["history"]) for item in items)
         self.players: list[str] = players
         
     def update(self, kwargs: dict) -> None:
         for key, value in kwargs.items():
             if key == "items":
-                for item in self.items:
-                    if item.name == ["name"]:
-                        item.history = value["history"]
+                self.items: list[Items] = list(Items(item["name"], item["history"]) for item in value)
             elif key == "players":
                 self.players = value
 
@@ -55,7 +53,7 @@ class Client:
             return False
         
     def receive_data(self, client_socket: socket.socket) -> None:
-        try:
+        # try:
             while True:
                 data:  bytes | bytearray  = client_socket.recv(1024)
                 if not data:
@@ -65,12 +63,11 @@ class Client:
                 cardRes = re.findall("C->:.+?:<-C", data)
                 if dataRes or cardRes:
                     for data in dataRes:
-                        try:
+                        # try:
                             jsonData = json.loads(data[4:-4:].replace("'", "\""))
                             self.datas[jsonData["room_name"]] = Datas(jsonData["room_name"], jsonData["items"], jsonData["players"])
-                            print(self.datasjsonData["room_name"])
-                        except Exception as e:
-                            print("Error decoding", data, e)
+                        # except Exception as e:
+                        #     print("Error decoding", data, e)
                     for data in cardRes:
                         try:
                             jsonData: str = json.loads(data[4:-4:].replace("'", "\""))
@@ -78,19 +75,19 @@ class Client:
                         except Exception as e:
                             print("Error decoding", data, e)
                         
-        except Exception as e:
-            print(e)
-            if str(e) != "[WinError 10053] 連線已被您主機上的軟體中止。":
-                log.success("Server isn't started, relunch the server to connet to it.")
+        # except Exception as e:
+        #     print(e)
+        #     if str(e) != "[WinError 10053] 連線已被您主機上的軟體中止。":
+        #         log.success("Server isn't started, relunch the server to connet to it.")
             
 
-        client_socket.close()
+        #    client_socket.close()
         
     def send_data(self, room_name: str=None, items: list[Items]=None, players: list[str]=None, cards: list[str]=None) -> bool:
         try:
             if room_name != None:
-                data = {"room_name" : room_name, "items" : [{"name": item.name, "history": item.history} for item in items], "players" : players}
-
+                data = {"room_name" : room_name, "items" : items, "players" : players}
+                
                 self.client_socket.send(f"J->:{data}:<-J".translate(str.maketrans("()", "[]")).encode('utf-8'))
             elif cards != None:
                 self.client_socket.send(f"C->:{cards}:<-C".encode('utf-8'))
@@ -106,9 +103,9 @@ class Client:
     
 def main() -> int:
     robin = Client("25.42.132.180")
-    
-    
-    
+
+
+
     return 0    
         
 if __name__ == "__main__":
