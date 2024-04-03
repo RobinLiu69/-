@@ -162,10 +162,8 @@ def main() -> int:
     rooms.append(r.Room("bedroom", screen.info(), screen.width*4/7, screen.height*0.26)) # bedroom
     
     room_map = r.Map(screen.info(), (screen.width, screen.height), rooms)
-    time.sleep(1)
     for room in rooms:
         room.data_update(player.Online.datas[room.name], screen.info())
-    
     running = True
     
     
@@ -177,7 +175,7 @@ def main() -> int:
         except:
             log.success("Card list empty")
         
-        player.hand = init_card(["Take", "Take", "Put_down", "Put_down", "Swap", "Swap"], screen.info())
+        player.hand = init_card(list(map(client.Items, ["Take", "Take", "Put_down", "Put_down", "Swap", "Swap"])), screen.info())
         
         
         log.success("Selecting rooms...")

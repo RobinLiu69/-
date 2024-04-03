@@ -1,18 +1,19 @@
 from os import path
-import pygame
+import pygame, client
 
 functional_cards = ("Put_down", "Kill", "Swap", "Trade", "Footprints", "Take", "View")
 
-def draw_card(cards: list[str], hand: list["Card"], screen_info: tuple[int, int]) -> tuple[list[str], list["Card"]]:
+def draw_card(cards: list[client.Items], hand: list["Card"], screen_info: tuple[int, int]) -> tuple[list[str], list["Card"]]:
     hand += init_card(cards.pop(), screen_info)
     return cards, hand
 
 # 做到一半
-def init_card(cards: list["str"], screen_info: tuple[int, int]) -> list["Card"]:
+def init_card(cards: list[client.Items], screen_info: tuple[int, int]) -> list["Card"]:
     temp = []
+    print(cards)
     for card in cards:
         # print(f"{card}({screen_info[0]/10})", type(eval(f"{card}({screen_info[0]/10})")))
-        temp.append(eval(f"{card}({screen_info[0]/10})"))
+        temp.append(eval(f"{card.name}({screen_info[0]/10}, {card.history})"))
     return temp
 
 

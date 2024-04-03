@@ -1,5 +1,5 @@
 import socket, json, re
-import threading, time, cards
+import threading, time
 from pwn import log
 
 class Items:
@@ -10,14 +10,14 @@ class Items:
 class Datas:
     def __init__(self, name: str, items: list[Items]=[], players: list[str]=[]) -> None:
         self.name: str = name
-        self.items: list[Items] = items
+        self.items: list[Items] = list(map(Items, items))
         self.players: list[str] = players
         
     def update(self, kwargs: dict) -> None:
         for key, value in kwargs.items():
             if key == "items":
                 for item in self.items:
-                    if item.name == value["name"]:
+                    if item.name == ["name"]:
                         item.history = value["history"]
             elif key == "players":
                 self.players = value
@@ -28,7 +28,7 @@ class Client:
         self.server_close = False
         self.client_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         self.server_address = (server_address, 40000)
-        self.datas: dict[Datas, str] = {}
+        self.datas: dict[Datas] = {}
         self.cards: list[str] = []
         
         while not self.connect(): log.success("Retrying to connect...")
@@ -68,6 +68,7 @@ class Client:
                         try:
                             jsonData = json.loads(data[4:-4:].replace("'", "\""))
                             self.datas[jsonData["room_name"]] = Datas(jsonData["room_name"], jsonData["items"], jsonData["players"])
+                            print(self.datasjsonData["room_name"])
                         except Exception as e:
                             print("Error decoding", data, e)
                     for data in cardRes:
@@ -85,11 +86,11 @@ class Client:
 
         client_socket.close()
         
-    def send_data(self, room_name: str=None, items: list[str]=None, players: list[str]=None, cards: list[str]=None) -> bool:
+    def send_data(self, room_name: str=None, items: list[Items]=None, players: list[str]=None, cards: list[str]=None) -> bool:
         try:
             if room_name != None:
-                data = {"room_name" : room_name, "items" : items, "players" : players}
-            
+                data = {"room_name" : room_name, "items" : [{"name": item.name, "history": item.history} for item in items], "players" : players}
+
                 self.client_socket.send(f"J->:{data}:<-J".translate(str.maketrans("()", "[]")).encode('utf-8'))
             elif cards != None:
                 self.client_socket.send(f"C->:{cards}:<-C".encode('utf-8'))

@@ -35,7 +35,7 @@ class Server:
         log.success('Waiting clients to connect...')
         self.clients: list[socket.socket] = []
         self.cards: list[str] = cards
-        self.datas: dict[Datas, str] = datas
+        self.datas: dict[Datas] = datas
         self.find_client()
 
     def handle_client(self, client_socket: socket.socket) -> None:
@@ -104,22 +104,22 @@ class Server:
             self.server_socket.close()
             log.success("Server shut down")
             
-        except Exception as e:
-            print(e)
+        # except Exception as e:
+        #     print("hit", e)
             
-        finally:
-            for client in self.clients:
-                client.close()
-            self.server_socket.close()
+        # finally:
+        #     for client in self.clients:
+        #         client.close()
+        #     self.server_socket.close()
 
 
 
 if __name__ == "__main__":
-    server = Server(cards=["Take", "Take"], datas={"kitchen": Datas("kitchen", ["Pork", "Mud", "Knife", "Knife", "Pork"], ["robin"]), 
-                                                   "yard": Datas("yard", ["Pork", "Pork", "Knife", "Knife", "Pork"], ["robin"]), 
-                                                   "bedroom": Datas("bedroom", ["Pork", "Pork", "Pork", "Knife", "Pork"], ["robin"]), 
-                                                   "study": Datas("study", ["Pork", "Pork", "Pork", "Pork", "Knife"], ["robin"]), 
-                                                   "livingroom": Datas("livingroom", ["Pork", "Pork", "Pork", "Pork", "Pork"], ["robin"])})
+    server = Server(cards=["Take", "Take"], datas={"kitchen": Datas("kitchen", list(map(Items, ["Pork", "Mud", "Knife", "Knife", "Pork"])), ["robin"]), 
+                                                   "yard": Datas("yard", list(map(Items, ["Pork", "Pork", "Knife", "Knife", "Pork"])), ["robin"]), 
+                                                   "bedroom": Datas("bedroom", list(map(Items, ["Pork", "Pork", "Pork", "Knife", "Pork"])), ["robin"]), 
+                                                   "study": Datas("study", list(map(Items, ["Pork", "Pork", "Pork", "Pork", "Knife"])), ["robin"]), 
+                                                   "livingroom": Datas("livingroom", list(map(Items, ["Pork", "Pork", "Pork", "Pork", "Pork"])), ["robin"])})
     
 
   
