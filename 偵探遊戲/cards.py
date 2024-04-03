@@ -200,12 +200,13 @@ class Pistol(Card):
         if selected_card in items and selected_card.name == "Chandelier":
             index = items.index(selected_card)
             items.remove(selected_card)
-            items.insert(index, Broken_chandelier(selected_card))
+            items.insert(index, Broken_chandelier(self.size, selected_card.x, selected_card.y))
         else:
             return -1
         if self in hand:
             hand.remove(self)
             items.append(self)
+            items.append(Bullet(self.size, selected_card.x+self.size, selected_card.y+self.size))
         else:
             return -1
         return 1
