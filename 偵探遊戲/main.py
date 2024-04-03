@@ -178,7 +178,7 @@ def main() -> int:
         
         player.hand = init_card(list(map(client.Items, ["Take", "Take", "Put_down", "Put_down", "Swap", "Swap"])), screen.info())
         
-        
+        Chandelier
         log.success("Selecting rooms...")
         the_room = room_selection(screen, rooms, room_map, player)
         

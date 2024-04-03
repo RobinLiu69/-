@@ -2,6 +2,8 @@ from os import path
 import pygame, client
 
 functional_cards = ("Put_down", "Kill", "Swap", "Trade", "Footprints", "Take", "View")
+furniture_cards = ("Chandelier")
+unmovable_cards = functional_cards + furniture_cards
 
 def draw_card(cards: list[client.Items], hand: list["Card"], screen_info: tuple[int, int]) -> tuple[list[str], list["Card"]]:
     hand += init_card(cards.pop(), screen_info)
@@ -79,7 +81,7 @@ class Take(Card):
         if len(selected_cards) > 1: return -1
         if len(selected_cards) < 1: return 0
         selected_card = selected_cards[0]
-        if selected_card in items and selected_card.name not in functional_cards:
+        if selected_card in items and selected_card.name not in unmovable_cards:
             items.remove(selected_card)
             hand.append(selected_card)
         else:
@@ -99,7 +101,7 @@ class Put_down(Card):
         if len(selected_cards) > 1: return -1
         if len(selected_cards) < 1: return 0
         selected_card = selected_cards[0]
-        if selected_card in hand and selected_card.name not in functional_cards:
+        if selected_card in hand and selected_card.name not in unmovable_cards:
             hand.remove(selected_card)
             items.append(selected_card)
         else:

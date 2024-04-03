@@ -117,7 +117,7 @@ if __name__ == "__main__":
                                                    "yard": Datas("yard", list(map(Items, ["Pork", "Pork", "Knife", "Knife", "Pork"])), ["robin"]), 
                                                    "bedroom": Datas("bedroom", list(map(Items, ["Pork", "Pork", "Pork", "Knife", "Pork"])), ["robin"]), 
                                                    "study": Datas("study", list(map(Items, ["Pork", "Pork", "Pork", "Pork", "Knife"])), ["robin"]), 
-                                                   "livingroom": Datas("livingroom", list(map(Items, ["Pork", "Pork", "Pork", "Pork", "Pork"])), ["robin"])})
+                                                   "livingroom": Datas("livingroom", list(map(Items, ["Pork", "Pork", "Pork", "Pork", "Chandelier"])), ["robin"])})
     
 
   
