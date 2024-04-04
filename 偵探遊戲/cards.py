@@ -2,14 +2,14 @@ from os import path
 import pygame, client
 
 functional_cards = ("Put_down", "Kill", "Swap", "Trade", "Footprints", "Take", "View")
-furniture_cards = ("Chandelier")
+furniture_cards = ("Chandelier",)
 unmovable_cards = functional_cards + furniture_cards
 
 def draw_card(cards: list[client.Items], hand: list["Card"], screen_info: tuple[int, int]) -> tuple[list[str], list["Card"]]:
     hand += init_card(cards.pop(), screen_info)
     return cards, hand
 
-# 做到一半
+
 def init_card(cards: list[client.Items], screen_info: tuple[int, int]) -> list["Card"]:
     temp = []
     for card in cards:
@@ -34,7 +34,15 @@ class Card:
         self.imageOriginal.blit(source = pygame.transform.scale(pygame.image.load(path.join("偵探遊戲/image/"+name+".png")).convert_alpha(),(self.width, self.height)), dest = (0,0))
         self.imageOriginal.set_colorkey((255,255,255))
         self.image = self.imageOriginal.copy()
-        
+
+    def cover(self):
+        cover_image = pygame.Surface((self.width,self.height))
+        cover_image.fill((255,255,255))
+        cover_image.blit(source = pygame.transform.scale(pygame.image.load(path.join("偵探遊戲/image/covered.png")).convert_alpha(),(self.width, self.height)), dest = (0,0))
+        cover_image.set_colorkey((255,255,255))
+        self.image = cover_image.copy()
+        print("covered")
+
     def update(self, surface: pygame.surface.Surface, screen_info: tuple[int, int], type: str, index: int=0, len: int=0, mouse_x: int=0, mouse_y: int=0) -> None:
         self.touching = self.touch(mouse_x, mouse_y)
         if type == "hand":
@@ -68,8 +76,9 @@ class Card:
     def draw(self, surface: pygame.surface.Surface):
         surface.blit(self.image, (self.x,self.y))
 
-    def cover(self, surface: pygame.surface.Surface):
-        ...
+
+
+
     def ability() -> None: ...
 
 
@@ -206,7 +215,7 @@ class Pistol(Card):
         if self in hand:
             hand.remove(self)
             items.append(self)
-            items.append(Bullet(self.size, selected_card.x+self.size, selected_card.y+self.size))
+            items.append(Bullet(self.size, self.x+self.size, self.y+self.size))
         else:
             return -1
         return 1
@@ -237,7 +246,19 @@ class Rag(Card):
         super().__init__(size, "Rag", history, x, y)#抹布
 
     def ability(self, selected_cards: list[Card], hand: list[Card], items: list[Card]) -> int:
-        ...
+        if len(selected_cards) > 1: return -1
+        if len(selected_cards) < 1: return 0
+        selected_card = selected_cards[0]
+        if selected_card in items and selected_card.name not in functional_cards:
+            selected_card.cover()
+        else:
+            return -1
+        if self in hand:
+            hand.remove(self)
+            items.append(self)
+        else:
+            return -1
+        return 1
 
 class Knife(Card):
     def __init__(self, size: int, history: list[str]=[], x: int=1, y: int=1) -> None:
