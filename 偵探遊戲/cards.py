@@ -2,7 +2,7 @@ from os import path
 import pygame, client
 
 functional_cards = ("Put_down", "Kill", "Swap", "Trade", "Footprints", "Take", "View")
-furniture_cards = ("Chandelier")
+furniture_cards: tuple[str] = ("Chandelier",)
 unmovable_cards = functional_cards + furniture_cards
 
 def draw_card(cards: list[client.Items], hand: list["Card"], screen_info: tuple[int, int]) -> tuple[list[str], list["Card"]]:
