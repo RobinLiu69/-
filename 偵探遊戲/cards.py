@@ -227,7 +227,7 @@ class Pillow(Card):
 
 class Safe(Card):
     def __init__(self, size: int, history: list[str]=[], x: int=1, y: int=1) -> None:
-        super().__init__(size, "Safe", history, x, y)#安全
+        super().__init__(size, "Safe", history, x, y)#保險箱
 
     def ability(self, selected_cards: list[Card], hand: list[Card], items: list[Card]) -> int:
         ...
@@ -403,6 +403,12 @@ class Broken_cross(Card):
 class  Broken_chandelier(Card):
     def __init__(self, size: int, x: int=1, y: int=1) -> None:
         super().__init__(size, "Broken_chandelier", x, y)#"破吊燈"
+
+    def ability(self, selected_cards: list[Card], hand: list[Card], items: list[Card]) -> int:
+        ...
+class Shower_head(Card):
+    def __init__(self, size: int, x: int=1, y: int=1) -> None:
+        super().__init__(size, "Shower_head", x, y)#花灑
 
     def ability(self, selected_cards: list[Card], hand: list[Card], items: list[Card]) -> int:
         ...
