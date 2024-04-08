@@ -191,7 +191,7 @@ def main() -> int:
         except:
             log.success("Card list empty")
         
-        player.hand = init_card(list(map(client.Items, ["Take", "Take", "Put_down", "Put_down", "Swap", "Swap"])), screen.info())
+        player.hand = init_card(list(map(client.Items, ["Take", "Take", "Put_down", "Put_down", "Swap", "Swap", "Rag", "Pistol"])), screen.info())
         
         Chandelier
         log.success("Selecting rooms...")

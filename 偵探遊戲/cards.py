@@ -34,7 +34,7 @@ class Card:
         self.imageOriginal.blit(source = pygame.transform.scale(pygame.image.load(path.join("偵探遊戲/image/"+name+".png")).convert_alpha(),(self.width, self.height)), dest = (0,0))
         self.imageOriginal.set_colorkey((255,255,255))
         self.image = self.imageOriginal.copy()
-        
+    
     def update(self, surface: pygame.surface.Surface, screen_info: tuple[int, int], type: str, index: int=0, len: int=0, mouse_x: int=0, mouse_y: int=0) -> None:
         self.touching = self.touch(mouse_x, mouse_y)
         if type == "hand":
@@ -68,8 +68,15 @@ class Card:
     def draw(self, surface: pygame.surface.Surface):
         surface.blit(self.image, (self.x,self.y))
 
-    def cover(self, surface: pygame.surface.Surface):
+    def cover(self, items:list):
+        index = items.index(self)
+        items.remove(self)
+        items.insert(index, Covered(self.width, self.history, self.x, self.y, self.name))
+        print(items[index].original)
+
+    def bright(self, items:list):
         ...
+
     def ability() -> None: ...
 
 
@@ -200,13 +207,16 @@ class Pistol(Card):
         if selected_card in items and selected_card.name == "Chandelier":
             index = items.index(selected_card)
             items.remove(selected_card)
-            items.insert(index, Broken_chandelier(self.size, selected_card.x, selected_card.y))
+            items.insert(index, Broken_cross(self.width, None, selected_card.x, selected_card.y))
+        #Broken_chandelier
         else:
             return -1
         if self in hand:
             hand.remove(self)
             items.append(self)
-            items.append(Bullet(self.size, selected_card.x+self.size, selected_card.y+self.size))
+            items.append(Bullet(self.width,None ,selected_card.x+self.width, selected_card.y+self.width))
+            for card in items:
+                card.cover(items)
         else:
             return -1
         return 1
@@ -237,7 +247,31 @@ class Rag(Card):
         super().__init__(size, "Rag", history, x, y)#抹布
 
     def ability(self, selected_cards: list[Card], hand: list[Card], items: list[Card]) -> int:
-        ...
+        if len(selected_cards) > 1: return -1
+        if len(selected_cards) < 1: return 0
+        selected_card = selected_cards[0]
+        if selected_card in items:
+            index = items.index(selected_card)
+            if selected_card.name != "Covered":
+                selected_card.cover(items)
+                if index != 0:
+                    items[index-1].cover(items)
+                if index!= len(items)-1:
+                    items[index+1].cover(items)
+            # if selected_card.name == "Covered":
+            #     selected_card.name = selected_card.original
+            #     if index != 0 and items[index+1].name == "Covered":
+            #         items[index+1].name = items[index+1].original
+            #     if index != len(items)-1 and items[index-1].name == "Covered":
+            #         items[index+1].name = items[index+1].original
+        else:
+            return -1
+        if self in hand:
+            hand.remove(self)
+            items.append(self)
+        else:
+            return -1
+        return 1
 
 class Knife(Card):
     def __init__(self, size: int, history: list[str]=[], x: int=1, y: int=1) -> None:
@@ -255,7 +289,7 @@ class Frozen_Pork(Card):
         
 class Pork(Card):
     def __init__(self, size: int, history: list[str]=[], x: int=1, y: int=1) -> None:
-        super().__init__(size, "Pork", history, x, y)#冷凍豬肉
+        super().__init__(size, "Pork", history, x, y)#豬肉
 
     def ability(self, selected_cards: list[Card], hand: list[Card], items: list[Card]) -> int:
         ...
@@ -401,14 +435,22 @@ class Broken_cross(Card):
         ...
 
 class  Broken_chandelier(Card):
-    def __init__(self, size: int, x: int=1, y: int=1) -> None:
+    def __init__(self, size: int, history: list[str]=[], x: int=1, y: int=1) -> None:
         super().__init__(size, "Broken_chandelier", x, y)#"破吊燈"
 
     def ability(self, selected_cards: list[Card], hand: list[Card], items: list[Card]) -> int:
         ...
 class Shower_head(Card):
-    def __init__(self, size: int, x: int=1, y: int=1) -> None:
+    def __init__(self, size: int, history: list[str]=[], x: int=1, y: int=1) -> None:
         super().__init__(size, "Shower_head", x, y)#花灑
+
+    def ability(self, selected_cards: list[Card], hand: list[Card], items: list[Card]) -> int:
+        ...
+
+class Covered(Card):
+    def __init__(self, size: int, history: list[str]=[], x: int=1, y: int=1, original: str="") -> None:
+        super().__init__(size, "Covered", x, y)#覆蓋
+        self.original = original
 
     def ability(self, selected_cards: list[Card], hand: list[Card], items: list[Card]) -> int:
         ...
