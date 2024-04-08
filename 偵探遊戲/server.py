@@ -82,7 +82,8 @@ class Server:
     def send_data(self, client_socket: socket.socket, data:Datas = None, cards: list[str]=None) -> None:
         if data != None:
             data = {"room_name" : data.name, "items" : [{"name": item.name, "history": item.history} for item in data.items], "players" : data.players}
-            client_socket.send(f"J->:{data}:<-J".encode('utf-8'))
+            if data["room_name"] == "livingroom": print(data)
+            print(client_socket.send(f"J->:{data}:<-J".encode('utf-8')))
         if cards != None:
             client_socket.send(f"C->:{cards}:<-C".encode('utf-8'))
         

@@ -69,7 +69,7 @@ class Map:
         
         self.imageOriginal = pygame.Surface((self.width, self.height))
         self.imageOriginal.fill((255, 255, 255))
-        self.imageOriginal.blit(source = pygame.transform.scale(pygame.image.load(path.join("偵探遊戲/image/地圖.png")).convert_alpha(),(size[0]*4/5, size[1]*4/5)), dest = (0,0))
+        self.imageOriginal.blit(source = pygame.transform.scale(pygame.image.load(path.join("偵探遊戲/image/Map.png")).convert_alpha(),(size[0]*4/5, size[1]*4/5)), dest = (0,0))
         self.imageOriginal.set_colorkey((255, 255, 255))
         self.image = self.imageOriginal.copy()
 

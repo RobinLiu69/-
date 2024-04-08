@@ -118,11 +118,14 @@ def enter_room(player: Player, screen: Screen, room: r.Room) -> None:
                             cards.clear()
                             break
                     if using_card != None and abs(using_card.ability(cards, player.hand, room.items)):
+                        print("change")
+                        print(cards)
                         using_card.using = False
                         using_card = None
                         for card in cards: card.using = False
                         cards.clear()
                         room.change(player.Online)
+                        room.data_update(player.Online.datas, screen.info())
 
         # hand_card = init_card(hand, screen.info())
         # item_card = init_card(room.items, screen.info())
@@ -150,6 +153,16 @@ def enter_room(player: Player, screen: Screen, room: r.Room) -> None:
         screen.flip()
     return  None
     
+def initial_room(rooms: list[r.Room], player: Player, screen: Screen) -> int:
+    try:
+        for room in rooms:
+            room.data_update(player.Online.datas[room.name], screen.info())
+        else:
+            return 0
+    except Exception as e:
+        print("key error: ", e)
+        return 1
+
 def main() -> int:
     
     player, rooms, screen = init()
@@ -162,11 +175,13 @@ def main() -> int:
     rooms.append(r.Room("bedroom", screen.info(), screen.width*4/7, screen.height*0.26)) # bedroom
     
     room_map = r.Map(screen.info(), (screen.width, screen.height), rooms)
-    for room in rooms:
-        room.data_update(player.Online.datas[room.name], screen.info())
+    while initial_room(rooms, player, screen):
+        print("Error when getting room's data...")
+        print("Retrying...")
+        time.sleep(1)
+        
     running = True
     
-    time.sleep(1)
     
     while running:
         try:

@@ -55,11 +55,12 @@ class Client:
     def receive_data(self, client_socket: socket.socket) -> None:
         # try:
             while True:
-                data:  bytes | bytearray  = client_socket.recv(1024)
+                data:  bytes | bytearray  = client_socket.recv(2048)
                 if not data:
                     break
                 data = data.decode('utf-8')
                 dataRes = re.findall("J->:.+?:<-J", data)
+                print(dataRes)
                 cardRes = re.findall("C->:.+?:<-C", data)
                 if dataRes or cardRes:
                     for data in dataRes:
@@ -87,7 +88,7 @@ class Client:
         try:
             if room_name != None:
                 data = {"room_name" : room_name, "items" : items, "players" : players}
-                
+                print("sent:", data)
                 self.client_socket.send(f"J->:{data}:<-J".translate(str.maketrans("()", "[]")).encode('utf-8'))
             elif cards != None:
                 self.client_socket.send(f"C->:{cards}:<-C".encode('utf-8'))
