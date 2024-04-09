@@ -19,7 +19,7 @@ def init_card(cards: list[client.Items], screen_info: tuple[int, int]) -> list["
 
 
 class Card:
-    def __init__(self, size: int, name: str, history: list=[], x: int=None , y: int=None) -> None:
+    def __init__(self, size: int, name: str, history: list=[], x: int=None , y: int=None, covered: bool=False) -> None:
         self.width = size
         self.height = size
         self.x = x
@@ -31,7 +31,11 @@ class Card:
         self.using = False
         self.imageOriginal = pygame.Surface((self.width,self.height))
         self.imageOriginal.fill((255,255,255))
-        self.imageOriginal.blit(source = pygame.transform.scale(pygame.image.load(path.join("偵探遊戲/image/"+name+".png")).convert_alpha(),(self.width, self.height)), dest = (0,0))
+        self.covered = covered
+        if not covered:
+            self.imageOriginal.blit(source = pygame.transform.scale(pygame.image.load(path.join("偵探遊戲/image/"+name+".png")).convert_alpha(),(self.width, self.height)), dest = (0,0))
+        else:
+            self.imageOriginal.blit(source = pygame.transform.scale(pygame.image.load(path.join("偵探遊戲/image/Covere.png")).convert_alpha(),(self.width, self.height)), dest = (0,0))
         self.imageOriginal.set_colorkey((255,255,255))
         self.image = self.imageOriginal.copy()
     
@@ -68,13 +72,13 @@ class Card:
     def draw(self, surface: pygame.surface.Surface):
         surface.blit(self.image, (self.x,self.y))
 
-    def cover(self, items:list):
+    def cover(self, items: list["Card"]):
         index = items.index(self)
         items.remove(self)
         items.insert(index, Covered(self.width, self.history, self.x, self.y, self.name))
         print(items[index].original)
 
-    def bright(self, items:list):
+    def bright(self, items: list):
         ...
 
     def ability() -> None: ...
@@ -448,9 +452,8 @@ class Shower_head(Card):
         ...
 
 class Covered(Card):
-    def __init__(self, size: int, history: list[str]=[], x: int=1, y: int=1, original: str="") -> None:
-        super().__init__(size, "Covered", x, y)#覆蓋
-        self.original = original
+    def __init__(self, size: int, history: list[str]=[], x: int=1, y: int=1, name: str="") -> None:
+        super().__init__(size, name, x, y, )#覆蓋
 
     def ability(self, selected_cards: list[Card], hand: list[Card], items: list[Card]) -> int:
         ...
