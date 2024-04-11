@@ -3,20 +3,20 @@ import threading, time
 from pwn import log
 
 class Items:
-    def __init__(self, name: str, history: list[str]=[]) -> None:
+    def __init__(self, name: str, history: list[str]=[], covered: bool= False) -> None:
         self.name: str = name
         self.history: list[str] = history
-        
+        self.covered: bool = covered
 class Datas:
     def __init__(self, name: str, items: list[dict]=[], players: list[str]=[]) -> None:
         self.name: str = name
-        self.items: list[Items] = list(Items(item["name"], item["history"]) for item in items)
+        self.items: list[Items] = list(Items(item["name"], item["history"],item["covered"] ) for item in items)
         self.players: list[str] = players
         
     def update(self, kwargs: dict) -> None:
         for key, value in kwargs.items():
             if key == "items":
-                self.items: list[Items] = list(Items(item["name"], item["history"]) for item in value)
+                self.items: list[Items] = list(Items(item["name"], item["history"], item["covered"]) for item in value)
             elif key == "players":
                 self.players = value
 
@@ -67,8 +67,10 @@ class Client:
                         # try:
                             jsonData = json.loads(data[4:-4:].replace("'", "\""))
                             self.datas[jsonData["room_name"]] = Datas(jsonData["room_name"], jsonData["items"], jsonData["players"])
+                            print("Received JSON data:", jsonData)
                         # except Exception as e:
                         #     print("Error decoding", data, e)
+
                     for data in cardRes:
                         try:
                             jsonData: str = json.loads(data[4:-4:].replace("'", "\""))

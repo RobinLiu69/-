@@ -123,9 +123,10 @@ def enter_room(player: Player, screen: Screen, room: r.Room) -> None:
                         using_card.using = False
                         using_card = None
                         for card in cards: card.using = False
-                        cards.clear()
+                        cards.clear() 
                         room.change(player.Online)
                         room.data_update(player.Online.datas, screen.info())
+                       
 
         # hand_card = init_card(hand, screen.info())
         # item_card = init_card(room.items, screen.info())
@@ -193,7 +194,6 @@ def main() -> int:
         
         player.hand = init_card(list(map(client.Items, ["Take", "Take", "Put_down", "Put_down", "Swap", "Swap", "Rag", "Pistol"])), screen.info())
         
-        Chandelier
         log.success("Selecting rooms...")
         the_room = room_selection(screen, rooms, room_map, player)
         
