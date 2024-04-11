@@ -10,7 +10,7 @@ class Items:
 class Datas:
     def __init__(self, name: str, items: list[dict]=[], players: list[str]=[]) -> None:
         self.name: str = name
-        self.items: list[Items] = list(Items(item["name"], item["history"],item["covered"] ) for item in items)
+        self.items: list[Items] = list(Items(item["name"], item["history"], item["covered"]) for item in items)
         self.players: list[str] = players
         
     def update(self, kwargs: dict) -> None:
