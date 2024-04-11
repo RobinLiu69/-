@@ -14,7 +14,10 @@ def init_card(cards: list[client.Items], screen_info: tuple[int, int]) -> list["
     temp = []
     for card in cards:
         # print(f"{card}({screen_info[0]/10})", type(eval(f"{card}({screen_info[0]/10})")))
-        temp.append(eval(f"{card.name}({screen_info[0]/10}, {card.history}, {card.covered})"))
+        if not card.covered:
+            temp.append(eval(f"{card.name}({screen_info[0]/10}, {card.history})"))
+        else:
+            temp.append(eval(f"Covered({screen_info[0]/10}, {card.history}, {card.name})"))
     return temp
 
 
@@ -456,20 +459,21 @@ class Broken_cross(Card):
 
 class  Broken_chandelier(Card):
     def __init__(self, size: int, history: list[str]=[], x: int=1, y: int=1) -> None:
-        super().__init__(size, "Broken_chandelier",history ,x, y)#"破吊燈"
+        super().__init__(size, "Broken_chandelier", history, x, y)#"破吊燈"
 
     def ability(self, selected_cards: list[Card], hand: list[Card], items: list[Card]) -> int:
         ...
+        
 class Shower_head(Card):
     def __init__(self, size: int, history: list[str]=[], x: int=1, y: int=1) -> None:
-        super().__init__(size, "Shower_head", x, y)#花灑
+        super().__init__(size, "Shower_head", history, x, y)#花灑  history: list = [],
 
     def ability(self, selected_cards: list[Card], hand: list[Card], items: list[Card]) -> int:
         ...
 
 class Covered(Card):
-    def __init__(self, size: int, history: list[str]=[], x: int=1, y: int=1, name: str="") -> None:
-        super().__init__(size, name, x, y, )#覆蓋
+    def __init__(self, size: int, history: list[str]=[], name: str="", x: int=1, y: int=1) -> None:
+        super().__init__(size, name, history ,x, y, True)#覆蓋
 
     def ability(self, selected_cards: list[Card], hand: list[Card], items: list[Card]) -> int:
         ...

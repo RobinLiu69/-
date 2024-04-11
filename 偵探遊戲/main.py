@@ -17,11 +17,11 @@ class Player:
         self.height = size
         self.x = x
         self.y = y
-        self.imageOriginal = pygame.Surface((self.width,self.height))
-        self.imageOriginal.fill((255,255,255))
-        self.imageOriginal.blit(source = pygame.transform.scale(pygame.image.load(path.join("偵探遊戲/image/"+name+".png")).convert_alpha(),(self.width, self.height)), dest = (0,0))
-        self.imageOriginal.set_colorkey((255,255,255))
-        self.image = self.imageOriginal.copy()
+        # self.imageOriginal = pygame.Surface((self.width,self.height))
+        # self.imageOriginal.fill((255,255,255))
+        # self.imageOriginal.blit(source = pygame.transform.scale(pygame.image.load(path.join("偵探遊戲/image/"+name+".png")).convert_alpha(),(self.width, self.height)), dest = (0,0))
+        # self.imageOriginal.set_colorkey((255,255,255))
+        # self.image = self.imageOriginal.copy()
     def update(self, surface):
         self.draw(surface)
 

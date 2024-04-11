@@ -3,10 +3,10 @@ import threading, time
 from pwn import log
 
 class Items:
-    def __init__(self, name: str, history: list[str]=[], covered: bool= False) -> None:
+    def __init__(self, name: str, history: list[str]=[], covered: int=0) -> None:
         self.name: str = name
         self.history: list[str] = history
-        self.covered: bool = covered
+        self.covered: int = covered
 class Datas:
     def __init__(self, name: str, items: list[dict]=[], players: list[str]=[]) -> None:
         self.name: str = name
@@ -16,7 +16,7 @@ class Datas:
     def update(self, kwargs: dict) -> None:
         for key, value in kwargs.items():
             if key == "items":
-                self.items: list[Items] = list(Items(item["name"], item["history"], item["covered"]) for item in value)
+                self.items: list[Items] = list(Items(item["name"], item["history"], int(item["covered"])) for item in value)
             elif key == "players":
                 self.players = value
 
@@ -101,7 +101,7 @@ class Client:
             print(e)
             log.success("Server are closed.")
             return False
-        
+
     
     
 def main() -> int:

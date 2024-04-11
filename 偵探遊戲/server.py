@@ -3,10 +3,10 @@ import threading
 from pwn import log
 
 class Items:
-    def __init__(self, name: str, history: list[str]=[], covered: bool= False) -> None:
+    def __init__(self, name: str, history: list[str]=[], covered: int=0) -> None:
         self.name: str = name
         self.history: list[str] = history
-        self.covered: bool = covered
+        self.covered: int = covered
         
 class Datas:
     def __init__(self, name: str, items: list[Items]=[], players: list[str]=[]) -> None:
@@ -17,7 +17,7 @@ class Datas:
     def update(self, kwargs: dict) -> None:
         for key, value in kwargs.items():
             if key == "items":
-                self.items: list[Items] = list(Items(item["name"], item["history"], item["covered"]) for item in value)
+                self.items: list[Items] = list(Items(item["name"], item["history"], int(item["covered"])) for item in value)
             elif key == "players":
                 self.players = value
 
@@ -82,7 +82,7 @@ class Server:
                 
     def send_data(self, client_socket: socket.socket, data:Datas = None, cards: list[str]=None) -> None:
         if data != None:
-            data = {"room_name" : data.name, "items" : [{"name": item.name, "history": item.history, "covered": item.covered} for item in data.items], "players" : data.players}
+            data = {"room_name" : data.name, "items" : [{"name": item.name, "history": item.history, "covered": int(item.covered)} for item in data.items], "players" : data.players}
             if data["room_name"] == "livingroom": print(data)
             print(client_socket.send(f"J->:{data}:<-J".encode('utf-8')))
         if cards != None:
