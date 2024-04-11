@@ -17,7 +17,7 @@ class Datas:
     def update(self, kwargs: dict) -> None:
         for key, value in kwargs.items():
             if key == "items":
-                self.items: list[Items] = list(Items(item["name"], item["history"],item["covered"] ) for item in value)
+                self.items: list[Items] = list(Items(item["name"], item["history"], item["covered"]) for item in value)
             elif key == "players":
                 self.players = value
 
