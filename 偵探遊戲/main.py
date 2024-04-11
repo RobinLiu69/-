@@ -9,11 +9,60 @@ import time
 
 
 class Player:
-    def __init__(self, name: str, server_address: str, hand: list[Card]=[]):
+    def __init__(self, name: str, server_address: str, hand: list[Card]=[], x: int = 1, y: int = 1, size: int = 1):
         self.name = name
         self.hand = hand
         self.Online = client.Client(server_address)
-    
+        self.width = size
+        self.height = size
+        self.x = x
+        self.y = y
+        self.imageOriginal = pygame.Surface((self.width,self.height))
+        self.imageOriginal.fill((255,255,255))
+        self.imageOriginal.blit(source = pygame.transform.scale(pygame.image.load(path.join("偵探遊戲/image/"+name+".png")).convert_alpha(),(self.width, self.height)), dest = (0,0))
+        self.imageOriginal.set_colorkey((255,255,255))
+        self.image = self.imageOriginal.copy()
+    def update(self, surface):
+        self.draw(surface)
+
+    def draw(self, surface: pygame.surface.Surface):
+        surface.blit(self.image, (self.x,self.y)) 
+
+    def selected(self):
+        ...
+
+# 偵探：遊戲開始獲得一張簡視
+# 園丁：將花朵放置於盆栽
+# 廚師：持有解凍肉及菜刀
+# 火雞：持有三種以上的凶器
+class Detective(Player):
+    def __init__(self, size: int, x: int = 1, y: int = 1) -> None:
+        super().__init__("Detective", size, x, y)
+
+    def ability(self) -> int:
+        ...
+
+class Gardener(Player):
+    def __init__(self, size: int, x: int = 1, y: int = 1) -> None:
+        super().__init__("Gardener", size, x, y)
+
+    def ability(self) -> int:
+        ...
+
+class Cheif(Player):
+    def __init__(self, size: int, x: int = 1, y: int = 1) -> None:
+        super().__init__("Cheif", size, x, y)
+
+    def ability(self) -> int:
+        ...
+
+class Firechicken(Player):
+    def __init__(self, size: int, x: int = 1, y: int = 1) -> None:
+        super().__init__("Firechicken", size, x, y)
+
+    def ability(self) -> int:
+        ...
+
 
 class Screen:
     def __init__(self, width: int=None, height: int=None) -> None:
